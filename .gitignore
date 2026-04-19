@@ -1,0 +1,59 @@
+# Build output
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+[Ll]ogs/
+
+# Visual Studio
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Visual Studio Code
+.vscode/
+
+# Rider
+.idea/
+*.sln.iml
+
+# NuGet
+*.nupkg
+*.snupkg
+packages/
+
+# Test results
+[Tt]est[Rr]esult*/
+[Bb]enchmarkDotNet.Artifacts/
+
+# Publish output
+publish/
+artifacts/
+
+# EF Core local db/dev artifacts
+*.db
+*.db-shm
+*.db-wal
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Generated files
+*.cache
+*.tmp
+*.temp
+
+# Local secrets/config overrides
+*.env
+*.env.*
+appsettings.Development.json
+appsettings.Local.json
+
+# Azure / tooling
+*.PublishSettings
+*.pubxml.user
+
+# Node modules (if any frontend is added later)
+node_modules/
