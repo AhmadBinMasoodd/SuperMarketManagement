@@ -1,6 +1,0 @@
-<Solution>
-  <Project Path="HospitalManagementSystem.Application/HospitalManagementSystem.Application.csproj" />
-  <Project Path="HospitalManagementSystem.Core/HospitalManagementSystem.Core.csproj" />
-  <Project Path="HospitalManagementSystem.Infrastructure/HospitalManagementSystem.Infrastructure.csproj" />
-  <Project Path="HospitalManagementSystem.WPF/HospitalManagementSystem.WPF.csproj" />
-</Solution>
