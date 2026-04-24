@@ -1,13 +1,6 @@
-﻿using System.Text;
+﻿using SuperMarketManagement.Controller;
+using SuperMarketManagement.Views.Admin;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace SuperMarketManagement
 {
@@ -16,9 +9,46 @@ namespace SuperMarketManagement
     /// </summary>
     public partial class MainWindow : Window
     {
+        private readonly LoginController _loginController = new();
+
         public MainWindow()
         {
             InitializeComponent();
+        }
+
+        private void LoginButton_Click(object sender, RoutedEventArgs e)
+        {
+            var username = EmailBox.Text.Trim();
+            var password = PasswordBox.Password;
+
+            if (string.IsNullOrWhiteSpace(username) || string.IsNullOrWhiteSpace(password))
+            {
+                ErrorText.Text = "Please enter username and password.";
+                return;
+            }
+
+            var role = _loginController.Authenticate(username, password);
+            if (string.IsNullOrWhiteSpace(role))
+            {
+                ErrorText.Text = "Invalid credentials.";
+                return;
+            }
+
+            ErrorText.Text = string.Empty;
+
+            if (role == "Admin")
+            {
+                var dashboard = new AdminDashboard();
+                dashboard.Show();
+                Close();
+                return;
+            }
+
+            if (role == "Manager")
+            {
+
+            }
+            ErrorText.Text = "Role not supported yet.";
         }
     }
 }

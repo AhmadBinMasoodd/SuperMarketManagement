@@ -19,6 +19,8 @@ public partial class MarketDbContext : DbContext
 
     public virtual DbSet<Product> Products { get; set; }
 
+    public virtual DbSet<StockTransaction> StockTransactions { get; set; }
+
     public virtual DbSet<User> Users { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -59,6 +61,21 @@ public partial class MarketDbContext : DbContext
                 .HasForeignKey(p => p.CategoryId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Products_Categories");
+        });
+
+        modelBuilder.Entity<StockTransaction>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK_StockTransactions");
+
+            entity.Property(e => e.QuantityChanged).HasColumnType("decimal(18, 2)");
+            entity.Property(e => e.TransactionDateTime).HasDefaultValueSql("(getdate())");
+            entity.Property(e => e.TransactionType).HasMaxLength(20);
+
+            entity.HasOne<Product>()
+                .WithMany()
+                .HasForeignKey(s => s.ProductId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_StockTransactions_Products");
         });
 
         OnModelCreatingPartial(modelBuilder);
