@@ -11,6 +11,7 @@ namespace SuperMarketManagement.Views.Admin
         private ContentControl? MainHost => FindName("MainContentHost") as ContentControl;
         private Button? DashboardBtn => FindName("DashboardButton") as Button;
         private Button? EmployeesBtn => FindName("EmployeesButton") as Button;
+        private Button? CategoryBtn => FindName("CategoryButton") as Button;
 
         public AdminDashboard()
         {
@@ -28,6 +29,12 @@ namespace SuperMarketManagement.Views.Admin
                 DashboardBtn.Click += DashboardButton_Click;
             }
 
+            if (CategoryBtn is not null)
+            {
+                CategoryBtn.Click -= CategoryButton_Click;
+                CategoryBtn.Click += CategoryButton_Click;
+            }
+
             LoadView(new ChartOverview(), DashboardBtn);
         }
 
@@ -39,6 +46,15 @@ namespace SuperMarketManagement.Views.Admin
         private void DashboardButton_Click(object sender, RoutedEventArgs e)
         {
             LoadView(new ChartOverview(), DashboardBtn);
+        }
+
+        private void CategoryButton_Click(object sender, RoutedEventArgs e)
+        {
+            LoadView(new Category(), CategoryBtn);
+        }
+
+        private void ProductButton_Click(object sender, RoutedEventArgs e)
+        {
         }
 
         private void LoadView(UserControl view, Button? activeButton)
@@ -61,6 +77,11 @@ namespace SuperMarketManagement.Views.Admin
             if (EmployeesBtn is not null)
             {
                 EmployeesBtn.Style = (Style)FindResource("SideMenuButtonStyle");
+            }
+
+            if (CategoryBtn is not null)
+            {
+                CategoryBtn.Style = (Style)FindResource("SideMenuButtonStyle");
             }
 
             if (activeButton is not null)

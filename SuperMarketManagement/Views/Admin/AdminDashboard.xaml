@@ -233,12 +233,7 @@
                                 </DockPanel>
                             </Button>
 
-                            <Button Style="{StaticResource SideMenuButtonStyle}">
-                                <DockPanel>
-                                    <Icons:PackIconMaterial Kind="PackageVariantClosed" Width="18" Height="18" Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}" Margin="0,0,10,0"/>
-                                    <TextBlock Text="Products" Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}" VerticalAlignment="Center"/>
-                                </DockPanel>
-                            </Button>
+                          
 
                             <Button Name="EmployeesButton" Click="EmployeesButton_Click">
                                 <Button.Style>
@@ -250,13 +245,22 @@
                                 </DockPanel>
                             </Button>
 
-                            <Button Style="{StaticResource SideMenuButtonStyle}">
+                            <Button Name="CategoryButton" Click="CategoryButton_Click" Style="{StaticResource SideMenuButtonStyle}">
                                 <DockPanel>
-                                    <Icons:PackIconMaterial Kind="AlertCircleOutline" Width="18" Height="18" Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}" Margin="0,0,10,0"/>
-                                    <TextBlock Text="Inventory Alerts" Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}" VerticalAlignment="Center"/>
+                                    <Icons:PackIconMaterial Kind="Cart" Width="18" Height="18" Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}" Margin="0,0,10,0"/>
+                                    <TextBlock Text="Categories" Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}" VerticalAlignment="Center"/>
                                 </DockPanel>
                             </Button>
-
+                            
+                            <Button Name="ProductBtn" Click="ProductButton_Click">
+                                <Button.Style>
+                                    <StaticResource ResourceKey="SideMenuButtonStyle" />
+                                </Button.Style>
+                                <DockPanel>
+                                    <Icons:PackIconMaterial Kind="PackageVariantClosed" Width="18" Height="18" Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}" Margin="0,0,10,0"/>
+                                    <TextBlock Text="Products" Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}" VerticalAlignment="Center"/>
+                                </DockPanel>
+                            </Button>
                             <Button Style="{StaticResource SideMenuButtonStyle}">
                                 <DockPanel>
                                     <Icons:PackIconMaterial Kind="ChartLine" Width="18" Height="18" Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}" Margin="0,0,10,0"/>

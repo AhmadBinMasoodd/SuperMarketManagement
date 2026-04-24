@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:SuperMarketManagement.Views.Admin"
              mc:Ignorable="d" 
+             FontFamily="Segoe UI"
              d:DesignHeight="650" d:DesignWidth="980">
     <UserControl.Resources>
         <SolidColorBrush x:Key="PrimaryBrush" Color="#623ED0"/>
@@ -27,6 +28,8 @@
 
         <Style x:Key="ActionButtonStyle" TargetType="Button">
             <Setter Property="Height" Value="38"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
             <Setter Property="Foreground" Value="White"/>
             <Setter Property="Background" Value="{StaticResource PrimaryBrush}"/>
             <Setter Property="BorderBrush" Value="{StaticResource PrimaryLightBrush}"/>

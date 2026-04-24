@@ -9,10 +9,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Models\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="MahApps.Metro.IconPacks.Material" Version="6.2.1" />
     <PackageReference Include="MaterialDesignColors" Version="5.3.1" />
     <PackageReference Include="MaterialDesignThemes" Version="5.3.1" />
