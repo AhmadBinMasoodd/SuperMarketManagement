@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:Icons="http://metro.mahapps.com/winfx/xaml/iconpacks"
              xmlns:local="clr-namespace:SuperMarketManagement.Views.Admin"
              mc:Ignorable="d" 
              FontFamily="Segoe UI"
@@ -284,27 +285,16 @@
                     <DataGridTextColumn Header="Role" Binding="{Binding Role}" Width="120"/>
                     <DataGridTextColumn Header="Username" Binding="{Binding Username}" Width="120"/>
                     <DataGridTextColumn Header="Salary" Binding="{Binding Salary}" Width="110"/>
-                    <DataGridTemplateColumn Header="Edit" Width="90">
+                    <DataGridTemplateColumn Header="Delete" Width="70">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <Button Content="Edit"
-                                        Style="{StaticResource GridActionButtonStyle}"
-                                        Width="72"
+                                <Button Style="{StaticResource GridDeleteButtonStyle}"
+                                        Width="34"
                                         HorizontalAlignment="Center"
                                         Tag="{Binding Id}"
-                                        Click="EditRowButton_Click"/>
-                            </DataTemplate>
-                        </DataGridTemplateColumn.CellTemplate>
-                    </DataGridTemplateColumn>
-                    <DataGridTemplateColumn Header="Delete" Width="90">
-                        <DataGridTemplateColumn.CellTemplate>
-                            <DataTemplate>
-                                <Button Content="Delete"
-                                        Style="{StaticResource GridDeleteButtonStyle}"
-                                        Width="72"
-                                        HorizontalAlignment="Center"
-                                        Tag="{Binding Id}"
-                                        Click="DeleteRowButton_Click"/>
+                                        Click="DeleteRowButton_Click">
+                                    <Icons:PackIconMaterial Kind="Delete" Width="16" Height="16" Foreground="White"/>
+                                </Button>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>

@@ -1,0 +1,285 @@
+<UserControl x:Class="SuperMarketManagement.Views.Admin.Product"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:Icons="http://metro.mahapps.com/winfx/xaml/iconpacks"
+             mc:Ignorable="d" 
+             FontFamily="Segoe UI"
+             d:DesignHeight="650" d:DesignWidth="980">
+    <UserControl.Resources>
+        <SolidColorBrush x:Key="PrimaryBrush" Color="#623ED0"/>
+        <SolidColorBrush x:Key="PrimaryLightBrush" Color="#7C5AE5"/>
+        <SolidColorBrush x:Key="SurfaceBrush" Color="#FFFFFF"/>
+        <SolidColorBrush x:Key="TextPrimaryBrush" Color="#1E293B"/>
+        <SolidColorBrush x:Key="TextSecondaryBrush" Color="#64748B"/>
+
+        <Style x:Key="LabelStyle" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="{StaticResource TextSecondaryBrush}"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Margin" Value="0,0,0,4"/>
+        </Style>
+
+        <Style x:Key="InputStyle" TargetType="Control">
+            <Setter Property="Height" Value="36"/>
+            <Setter Property="FontSize" Value="13"/>
+        </Style>
+
+        <Style x:Key="ActionButtonStyle" TargetType="Button">
+            <Setter Property="Height" Value="38"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Background" Value="{StaticResource PrimaryBrush}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource PrimaryLightBrush}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="BtnBorder"
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="9">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="BtnBorder" Property="Background" Value="#7C5AE5"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="BtnBorder" Property="Background" Value="#4C1D95"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="GridDeleteButtonStyle" TargetType="Button">
+            <Setter Property="Width" Value="34"/>
+            <Setter Property="Height" Value="30"/>
+            <Setter Property="Background" Value="#DC2626"/>
+            <Setter Property="BorderBrush" Value="#F87171"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="DeleteBtnBorder"
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="7">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="DeleteBtnBorder" Property="Background" Value="#EF4444"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="DeleteBtnBorder" Property="Background" Value="#B91C1C"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </UserControl.Resources>
+
+    <Grid Margin="8">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <Border Grid.Row="0"
+                Background="{StaticResource SurfaceBrush}"
+                Padding="16"
+                CornerRadius="12"
+                BorderBrush="#E2E8F0"
+                BorderThickness="1"
+                Margin="0,0,0,8">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="12"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="12"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="12"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <Border Grid.Row="0"
+                        Grid.Column="0"
+                        Grid.ColumnSpan="7"
+                        Background="#F3F0FF"
+                        CornerRadius="10"
+                        Padding="12"
+                        Margin="0,0,0,8">
+                    <StackPanel>
+                        <TextBlock Text="Product Management"
+                                   FontSize="20"
+                                   FontWeight="SemiBold"
+                                   Foreground="{StaticResource TextPrimaryBrush}"/>
+                        <TextBlock Text="Manage product pricing, stock quantity, and units"
+                                   FontSize="12"
+                                   Foreground="{StaticResource TextSecondaryBrush}"
+                                   Margin="0,2,0,0"/>
+                    </StackPanel>
+                </Border>
+
+                <StackPanel Grid.Row="1" Grid.Column="0">
+                    <TextBlock Text="Product Name" Style="{StaticResource LabelStyle}"/>
+                    <TextBox x:Name="ProductNameTextBox" Style="{StaticResource InputStyle}"/>
+                </StackPanel>
+
+                <StackPanel Grid.Row="1" Grid.Column="2">
+                    <TextBlock Text="Category" Style="{StaticResource LabelStyle}"/>
+                    <ComboBox x:Name="CategoryComboBox" Style="{StaticResource InputStyle}" DisplayMemberPath="Name" SelectedValuePath="Id"/>
+                </StackPanel>
+
+                <StackPanel Grid.Row="1" Grid.Column="4">
+                    <TextBlock Text="Purchase Price" Style="{StaticResource LabelStyle}"/>
+                    <TextBox x:Name="PurchasePriceTextBox" Style="{StaticResource InputStyle}"/>
+                </StackPanel>
+
+                <StackPanel Grid.Row="1" Grid.Column="6">
+                    <TextBlock Text="Sale Price" Style="{StaticResource LabelStyle}"/>
+                    <TextBox x:Name="SalePriceTextBox" Style="{StaticResource InputStyle}"/>
+                </StackPanel>
+
+                <StackPanel Grid.Row="2" Grid.Column="0" Margin="0,8,0,0">
+                    <TextBlock Text="Quantity" Style="{StaticResource LabelStyle}"/>
+                    <TextBox x:Name="QuantityTextBox" Style="{StaticResource InputStyle}"/>
+                </StackPanel>
+
+                <StackPanel Grid.Row="2" Grid.Column="2" Margin="0,8,0,0">
+                    <TextBlock Text="Unit" Style="{StaticResource LabelStyle}"/>
+                    <TextBox x:Name="UnitTextBox" Style="{StaticResource InputStyle}"/>
+                </StackPanel>
+
+                <StackPanel Grid.Row="2" Grid.Column="6" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,8,0,0">
+                    <Button x:Name="AddProductButton" Style="{StaticResource ActionButtonStyle}" Content="Add" Width="96" Margin="0,0,8,0" Click="AddProductButton_Click"/>
+                    <Button x:Name="UpdateProductButton" Style="{StaticResource ActionButtonStyle}" Content="Update" Width="96" Click="UpdateProductButton_Click"/>
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <Border Grid.Row="1"
+                Background="{StaticResource SurfaceBrush}"
+                Padding="10"
+                CornerRadius="12"
+                BorderBrush="#E2E8F0"
+                BorderThickness="1">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="8"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <DockPanel Grid.Row="0" LastChildFill="False">
+                    <TextBlock DockPanel.Dock="Left"
+                               Text="Product List"
+                               FontSize="16"
+                               FontWeight="SemiBold"
+                               Foreground="#1E293B"
+                               VerticalAlignment="Center"/>
+                    <TextBox x:Name="SearchTextBox"
+                             DockPanel.Dock="Right"
+                             Width="230"
+                             Height="34"
+                             FontSize="13"
+                             VerticalAlignment="Center"
+                             ToolTip="Search by product, category, or unit"
+                             TextChanged="SearchTextBox_TextChanged"/>
+                </DockPanel>
+
+                <DataGrid Grid.Row="2"
+                          x:Name="ProductDataGrid"
+                          Background="White"
+                          FontSize="14"
+                          GridLinesVisibility="Horizontal"
+                          RowBackground="#FFFFFF"
+                          AlternatingRowBackground="#F8FAFC"
+                          RowHeaderWidth="0"
+                          BorderThickness="0"
+                          HorizontalGridLinesBrush="#E2E8F0"
+                          VerticalGridLinesBrush="#EEF2F7"
+                          SelectionUnit="FullRow"
+                          AutoGenerateColumns="False"
+                          IsReadOnly="True"
+                          CanUserAddRows="False"
+                          SelectionMode="Single"
+                          SelectionChanged="ProductDataGrid_SelectionChanged">
+                    <DataGrid.Resources>
+                        <Style TargetType="DataGridColumnHeader">
+                            <Setter Property="Background" Value="#F3F0FF"/>
+                            <Setter Property="Foreground" Value="#4C1D95"/>
+                            <Setter Property="FontSize" Value="14"/>
+                            <Setter Property="FontWeight" Value="SemiBold"/>
+                            <Setter Property="Height" Value="40"/>
+                            <Setter Property="Padding" Value="10,0"/>
+                            <Setter Property="BorderBrush" Value="#DDD6FE"/>
+                            <Setter Property="BorderThickness" Value="0,0,0,1"/>
+                        </Style>
+                        <Style TargetType="DataGridCell">
+                            <Setter Property="FontSize" Value="13"/>
+                            <Setter Property="Padding" Value="8,6"/>
+                            <Setter Property="BorderThickness" Value="0"/>
+                            <Setter Property="Foreground" Value="#1E293B"/>
+                            <Setter Property="VerticalContentAlignment" Value="Center"/>
+                            <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+                            <Style.Triggers>
+                                <Trigger Property="IsSelected" Value="True">
+                                    <Setter Property="Background" Value="#EDE9FE"/>
+                                    <Setter Property="BorderBrush" Value="#DDD6FE"/>
+                                    <Setter Property="Foreground" Value="#1E293B"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                        <Style TargetType="DataGridRow">
+                            <Setter Property="Height" Value="42"/>
+                            <Setter Property="BorderThickness" Value="0"/>
+                            <Style.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Background" Value="#EEF2FF"/>
+                                </Trigger>
+                                <Trigger Property="IsSelected" Value="True">
+                                    <Setter Property="Background" Value="#EDE9FE"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </DataGrid.Resources>
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Id" Binding="{Binding Id}" Width="60"/>
+                        <DataGridTextColumn Header="Name" Binding="{Binding Name}" Width="*"/>
+                        <DataGridTextColumn Header="Category" Binding="{Binding CategoryName}" Width="120"/>
+                        <DataGridTextColumn Header="Purchase" Binding="{Binding PurchasePrice}" Width="90"/>
+                        <DataGridTextColumn Header="Sale" Binding="{Binding SalePrice}" Width="90"/>
+                        <DataGridTextColumn Header="Quantity" Binding="{Binding Quantity}" Width="90"/>
+                        <DataGridTextColumn Header="Unit" Binding="{Binding Unit}" Width="90"/>
+                        <DataGridTemplateColumn Header="Delete" Width="70">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Button Style="{StaticResource GridDeleteButtonStyle}" Tag="{Binding Id}" Click="DeleteProductButton_Click">
+                                        <Icons:PackIconMaterial Kind="Delete" Width="16" Height="16" Foreground="White"/>
+                                    </Button>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </Grid>
+        </Border>
+    </Grid>
+</UserControl>

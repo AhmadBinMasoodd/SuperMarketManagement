@@ -187,22 +187,6 @@ namespace SuperMarketManagement.Views.Admin
             ClearForm();
         }
 
-        private void EditRowButton_Click(object sender, RoutedEventArgs e)
-        {
-            if (sender is not Button { Tag: int id })
-            {
-                return;
-            }
-
-            var user = _controller.GetEmployeeById(id);
-            if (user is null)
-            {
-                return;
-            }
-
-            FillForm(user);
-        }
-
         private void DeleteRowButton_Click(object sender, RoutedEventArgs e)
         {
             if (sender is not Button { Tag: int id })
