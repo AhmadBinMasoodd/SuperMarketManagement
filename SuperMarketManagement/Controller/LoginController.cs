@@ -1,4 +1,4 @@
-﻿using SuperMarketManagement.Models;
+using SuperMarketManagement.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,17 +13,15 @@ namespace SuperMarketManagement.Controller
         {
 
         }
-        public string Authenticate(string username,string password)
+        public User? Authenticate(string username,string password)
         {
             var user = _context.Users.FirstOrDefault(u => u.Username == username && u.Password == password);
             if (user is null)
             {
-                return string.Empty;
+                return null;
             }
 
-            string role = user.Role;
-
-            return role;
+            return user;
         }
     }
 }

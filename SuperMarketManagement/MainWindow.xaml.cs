@@ -1,5 +1,6 @@
-﻿using SuperMarketManagement.Controller;
+using SuperMarketManagement.Controller;
 using SuperMarketManagement.Views.Admin;
+using SuperMarketManagement.Views.Manager;
 using System.Windows;
 
 namespace SuperMarketManagement
@@ -27,8 +28,8 @@ namespace SuperMarketManagement
                 return;
             }
 
-            var role = _loginController.Authenticate(username, password);
-            if (string.IsNullOrWhiteSpace(role))
+            var user = _loginController.Authenticate(username, password);
+            if (user is null)
             {
                 ErrorText.Text = "Invalid credentials.";
                 return;
@@ -36,7 +37,7 @@ namespace SuperMarketManagement
 
             ErrorText.Text = string.Empty;
 
-            if (role == "Admin")
+            if (user.Role == "Admin")
             {
                 var dashboard = new AdminDashboard();
                 dashboard.Show();
@@ -44,9 +45,12 @@ namespace SuperMarketManagement
                 return;
             }
 
-            if (role == "Manager")
+            if (user.Role == "Manager")
             {
-
+                var dashboard = new ManagerDashboard(user);
+                dashboard.Show();
+                Close();
+                return;
             }
             ErrorText.Text = "Role not supported yet.";
         }
