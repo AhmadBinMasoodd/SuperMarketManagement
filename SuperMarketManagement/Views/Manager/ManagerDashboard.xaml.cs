@@ -10,14 +10,17 @@ namespace SuperMarketManagement.Views.Manager
     /// </summary>
     public partial class ManagerDashboard : Window
     {
+        private readonly User _user;
         private ContentControl? MainHost => FindName("MainContentHost") as ContentControl;
         private Button? DashboardBtn => FindName("DashboardButton") as Button;
         private Button? CategoryBtn => FindName("CategoryButton") as Button;
         private Button? ProductMenuBtn => FindName("ProductBtn") as Button;
+        private Button? StockHistoryMenuBtn => FindName("StockHistoryBtn") as Button;
 
         public ManagerDashboard(User user)
         {
             InitializeComponent();
+            _user = user;
 
             if (user != null)
             {
@@ -45,6 +48,12 @@ namespace SuperMarketManagement.Views.Manager
                 ProductMenuBtn.Click += ProductButton_Click;
             }
 
+            if (StockHistoryMenuBtn is not null)
+            {
+                StockHistoryMenuBtn.Click -= StockHistoryButton_Click;
+                StockHistoryMenuBtn.Click += StockHistoryButton_Click;
+            }
+
             LoadView(new ChartOverview(), DashboardBtn);
         }
 
@@ -60,7 +69,12 @@ namespace SuperMarketManagement.Views.Manager
 
         private void ProductButton_Click(object sender, RoutedEventArgs e)
         {
-            LoadView(new Views.Admin.Product(), ProductMenuBtn);
+            LoadView(new Views.Admin.Product(_user), ProductMenuBtn);
+        }
+
+        private void StockHistoryButton_Click(object sender, RoutedEventArgs e)
+        {
+            LoadView(new Views.Admin.StockHistory(_user), StockHistoryMenuBtn);
         }
 
         private void CloseBtn_Click(object sender, RoutedEventArgs e)
@@ -100,6 +114,11 @@ namespace SuperMarketManagement.Views.Manager
             if (ProductMenuBtn is not null)
             {
                 ProductMenuBtn.Style = (Style)FindResource("SideMenuButtonStyle");
+            }
+
+            if (StockHistoryBtn is not null)
+            {
+                StockHistoryBtn.Style = (Style)FindResource("SideMenuButtonStyle");
             }
 
             if (activeButton is not null)

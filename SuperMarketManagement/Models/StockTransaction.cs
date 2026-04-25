@@ -11,6 +11,8 @@ public partial class StockTransaction
 
     public int ProductId { get; set; }
 
+    public int UserId { get; set; }
+
     [StringLength(20)]
     public string TransactionType { get; set; } = null!;
 
@@ -18,4 +20,7 @@ public partial class StockTransaction
     public decimal QuantityChanged { get; set; }
 
     public DateTime TransactionDateTime { get; set; }
+
+    [StringLength(50)]
+    public string? Remarks { get; set; }
 }

@@ -1,5 +1,6 @@
-﻿using System.Windows;
+using System.Windows;
 using System.Windows.Controls;
+using SuperMarketManagement.Models;
 
 namespace SuperMarketManagement.Views.Admin
 {
@@ -8,15 +9,18 @@ namespace SuperMarketManagement.Views.Admin
     /// </summary>
     public partial class AdminDashboard : Window
     {
+        private readonly User _user;
         private ContentControl? MainHost => FindName("MainContentHost") as ContentControl;
         private Button? DashboardBtn => FindName("DashboardButton") as Button;
         private Button? EmployeesBtn => FindName("EmployeesButton") as Button;
         private Button? CategoryBtn => FindName("CategoryButton") as Button;
         private Button? ProductMenuBtn => FindName("ProductBtn") as Button;
+        private Button? StockHistoryMenuBtn => FindName("StockHistoryBtn") as Button;
 
-        public AdminDashboard()
+        public AdminDashboard(User user)
         {
             InitializeComponent();
+            _user = user;
 
             if (EmployeesBtn is not null)
             {
@@ -42,6 +46,12 @@ namespace SuperMarketManagement.Views.Admin
                 ProductMenuBtn.Click += ProductButton_Click;
             }
 
+            if (StockHistoryMenuBtn is not null)
+            {
+                StockHistoryMenuBtn.Click -= StockHistoryButton_Click;
+                StockHistoryMenuBtn.Click += StockHistoryButton_Click;
+            }
+
             LoadView(new ChartOverview(), DashboardBtn);
         }
 
@@ -62,7 +72,12 @@ namespace SuperMarketManagement.Views.Admin
 
         private void ProductButton_Click(object sender, RoutedEventArgs e)
         {
-            LoadView(new Product(), ProductMenuBtn);
+            LoadView(new Product(_user), ProductMenuBtn);
+        }
+
+        private void StockHistoryButton_Click(object sender, RoutedEventArgs e)
+        {
+            LoadView(new StockHistory(_user), StockHistoryMenuBtn);
         }
 
         private void LoadView(UserControl view, Button? activeButton)
@@ -95,6 +110,11 @@ namespace SuperMarketManagement.Views.Admin
             if (ProductMenuBtn is not null)
             {
                 ProductMenuBtn.Style = (Style)FindResource("SideMenuButtonStyle");
+            }
+
+            if (StockHistoryBtn is not null)
+            {
+                StockHistoryBtn.Style = (Style)FindResource("SideMenuButtonStyle");
             }
 
             if (activeButton is not null)

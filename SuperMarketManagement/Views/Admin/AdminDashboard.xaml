@@ -1,4 +1,4 @@
-﻿<Window x:Class="SuperMarketManagement.Views.Admin.AdminDashboard"
+<Window x:Class="SuperMarketManagement.Views.Admin.AdminDashboard"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -261,10 +261,10 @@
                                     <TextBlock Text="Products" Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}" VerticalAlignment="Center"/>
                                 </DockPanel>
                             </Button>
-                            <Button Style="{StaticResource SideMenuButtonStyle}">
+                            <Button Name="StockHistoryBtn" Click="StockHistoryButton_Click" Style="{StaticResource SideMenuButtonStyle}">
                                 <DockPanel>
-                                    <Icons:PackIconMaterial Kind="ChartLine" Width="18" Height="18" Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}" Margin="0,0,10,0"/>
-                                    <TextBlock Text="Analytics" Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}" VerticalAlignment="Center"/>
+                                    <Icons:PackIconMaterial Kind="History" Width="18" Height="18" Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}" Margin="0,0,10,0"/>
+                                    <TextBlock Text="Stock History" Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}" VerticalAlignment="Center"/>
                                 </DockPanel>
                             </Button>
                         </StackPanel>

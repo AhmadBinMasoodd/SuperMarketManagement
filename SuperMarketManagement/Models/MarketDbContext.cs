@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 
@@ -70,12 +70,19 @@ public partial class MarketDbContext : DbContext
             entity.Property(e => e.QuantityChanged).HasColumnType("decimal(18, 2)");
             entity.Property(e => e.TransactionDateTime).HasDefaultValueSql("(getdate())");
             entity.Property(e => e.TransactionType).HasMaxLength(20);
+            entity.Property(e => e.Remarks).HasMaxLength(50);
 
             entity.HasOne<Product>()
                 .WithMany()
                 .HasForeignKey(s => s.ProductId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_StockTransactions_Products");
+
+            entity.HasOne<User>()
+                .WithMany()
+                .HasForeignKey(s => s.UserId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_StockTransactions_Users");
         });
 
         OnModelCreatingPartial(modelBuilder);

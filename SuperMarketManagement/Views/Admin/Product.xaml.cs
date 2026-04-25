@@ -9,6 +9,7 @@ namespace SuperMarketManagement.Views.Admin
     {
         private readonly ProductController _controller = new();
         private Models.Product? _selectedProduct;
+        private readonly User _user;
 
         private DataGrid? ProductGrid => FindName("ProductDataGrid") as DataGrid;
         private TextBox? ProductNameInput => FindName("ProductNameTextBox") as TextBox;
@@ -19,11 +20,27 @@ namespace SuperMarketManagement.Views.Admin
         private TextBox? UnitInput => FindName("UnitTextBox") as TextBox;
         private TextBox? SearchInput => FindName("SearchTextBox") as TextBox;
 
-        public Product()
+        public Product(User user)
         {
             InitializeComponent();
+            _user = user;
             LoadCategories();
             LoadProducts();
+
+            if (_user != null && _user.Role == "Manager")
+            {
+                if (ProductNameInput != null) ProductNameInput.IsReadOnly = true;
+                if (CategoryInput != null) CategoryInput.IsEnabled = false;
+                if (UnitInput != null) UnitInput.IsReadOnly = true;
+
+                var addBtn = FindName("AddProductButton") as Button;
+                if (addBtn != null) addBtn.Visibility = Visibility.Collapsed;
+
+                if (ProductGrid != null && ProductGrid.Columns.Count > 7)
+                {
+                    ProductGrid.Columns[7].Visibility = Visibility.Collapsed;
+                }
+            }
         }
 
         ~Product()
@@ -111,7 +128,7 @@ namespace SuperMarketManagement.Views.Admin
                 return;
             }
 
-            _controller.AddProduct(input);
+            _controller.AddProduct(input, _user.Id);
             LoadProducts(SearchInput?.Text);
             ClearForm();
         }
@@ -137,10 +154,10 @@ namespace SuperMarketManagement.Views.Admin
                 return;
             }
 
-            var updated = _controller.UpdateProduct(_selectedProduct.Id, input);
-            if (!updated)
+            var result = _controller.UpdateProduct(_selectedProduct.Id, input, _user);
+            if (!result.IsValid)
             {
-                MessageBox.Show("Product not found.", "Update", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show(result.Message, "Update", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
 

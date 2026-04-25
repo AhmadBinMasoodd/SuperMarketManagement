@@ -101,7 +101,7 @@ public sealed class ProductController : IDisposable
         return (true, string.Empty);
     }
 
-    public void AddProduct(ProductInput input)
+    public void AddProduct(ProductInput input, int userId)
     {
         var product = new Product
         {
@@ -115,25 +115,64 @@ public sealed class ProductController : IDisposable
 
         _context.Products.Add(product);
         _context.SaveChanges();
+
+        if (product.Quantity > 0)
+        {
+            var transaction = new StockTransaction
+            {
+                ProductId = product.Id,
+                UserId = userId,
+                TransactionType = "In",
+                QuantityChanged = product.Quantity,
+                Remarks = "Added new product"
+            };
+            _context.StockTransactions.Add(transaction);
+            _context.SaveChanges();
+        }
     }
 
-    public bool UpdateProduct(int id, ProductInput input)
+    public (bool IsValid, string Message) UpdateProduct(int id, ProductInput input, User user)
     {
         var product = _context.Products.FirstOrDefault(p => p.Id == id);
         if (product is null)
         {
-            return false;
+            return (false, "Product not found.");
+        }
+
+        decimal newQuantity = decimal.Parse(input.QuantityText);
+        decimal newPurchasePrice = decimal.Parse(input.PurchasePriceText);
+
+        if (user.Role == "Manager")
+        {
+            if (newQuantity < product.Quantity && newPurchasePrice != product.PurchasePrice)
+            {
+                return (false, "Manager cannot change purchase price when stock decreases.");
+            }
+        }
+
+        decimal qtyDiff = newQuantity - product.Quantity;
+        if (qtyDiff != 0)
+        {
+            var transaction = new StockTransaction
+            {
+                ProductId = product.Id,
+                UserId = user.Id,
+                TransactionType = qtyDiff > 0 ? "In" : "Out",
+                QuantityChanged = Math.Abs(qtyDiff),
+                Remarks = qtyDiff > 0 ? "Stock increased" : "Stock decreased"
+            };
+            _context.StockTransactions.Add(transaction);
         }
 
         product.Name = input.Name.Trim();
         product.CategoryId = input.CategoryId;
-        product.PurchasePrice = decimal.Parse(input.PurchasePriceText);
+        product.PurchasePrice = newPurchasePrice;
         product.SalePrice = decimal.Parse(input.SalePriceText);
-        product.Quantity = decimal.Parse(input.QuantityText);
+        product.Quantity = newQuantity;
         product.Unit = input.Unit.Trim();
 
         _context.SaveChanges();
-        return true;
+        return (true, string.Empty);
     }
 
     public bool DeleteProduct(int id)
@@ -147,6 +186,44 @@ public sealed class ProductController : IDisposable
         _context.Products.Remove(product);
         _context.SaveChanges();
         return true;
+    }
+
+    public List<StockHistoryGridItem> GetStockHistory(string? search = null)
+    {
+        var query = _context.StockTransactions
+            .AsNoTracking()
+            .Join(
+                _context.Products.AsNoTracking(),
+                st => st.ProductId,
+                p => p.Id,
+                (st, p) => new { st, p }
+            )
+            .Join(
+                _context.Users.AsNoTracking(),
+                stp => stp.st.UserId,
+                u => u.Id,
+                (stp, u) => new StockHistoryGridItem
+                {
+                    Id = stp.st.Id,
+                    ProductName = stp.p.Name,
+                    UserName = u.Name,
+                    TransactionType = stp.st.TransactionType,
+                    QuantityChanged = stp.st.QuantityChanged,
+                    TransactionDateTime = stp.st.TransactionDateTime,
+                    Remarks = stp.st.Remarks
+                }
+            );
+
+        if (!string.IsNullOrWhiteSpace(search))
+        {
+            var text = search.Trim();
+            query = query.Where(x =>
+                x.ProductName.Contains(text) ||
+                x.UserName.Contains(text) ||
+                x.TransactionType.Contains(text));
+        }
+
+        return query.OrderByDescending(x => x.TransactionDateTime).ToList();
     }
 
     public void Dispose()
@@ -175,4 +252,15 @@ public sealed class ProductGridItem
     public decimal SalePrice { get; set; }
     public decimal Quantity { get; set; }
     public string Unit { get; set; } = string.Empty;
+}
+
+public sealed class StockHistoryGridItem
+{
+    public int Id { get; set; }
+    public string ProductName { get; set; } = string.Empty;
+    public string UserName { get; set; } = string.Empty;
+    public string TransactionType { get; set; } = string.Empty;
+    public decimal QuantityChanged { get; set; }
+    public DateTime TransactionDateTime { get; set; }
+    public string? Remarks { get; set; }
 }

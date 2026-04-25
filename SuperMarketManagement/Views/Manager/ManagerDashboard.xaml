@@ -247,6 +247,13 @@
                                     <TextBlock Text="Products" Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}" VerticalAlignment="Center"/>
                                 </DockPanel>
                             </Button>
+
+                            <Button Name="StockHistoryBtn" Click="StockHistoryButton_Click" Style="{StaticResource SideMenuButtonStyle}">
+                                <DockPanel>
+                                    <Icons:PackIconMaterial Kind="History" Width="18" Height="18" Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}" Margin="0,0,10,0"/>
+                                    <TextBlock Text="Stock History" Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}" VerticalAlignment="Center"/>
+                                </DockPanel>
+                            </Button>
                         </StackPanel>
                     </ScrollViewer>
                 </DockPanel>

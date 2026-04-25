@@ -39,7 +39,7 @@ namespace SuperMarketManagement
 
             if (user.Role == "Admin")
             {
-                var dashboard = new AdminDashboard();
+                var dashboard = new AdminDashboard(user);
                 dashboard.Show();
                 Close();
                 return;
