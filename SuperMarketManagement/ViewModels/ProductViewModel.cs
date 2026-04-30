@@ -1,6 +1,7 @@
 using System;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Input;
 using SuperMarketManagement.Models;
@@ -28,6 +29,9 @@ namespace SuperMarketManagement.ViewModels
 
     public class ProductViewModel : ViewModelBase, IDisposable
     {
+        private const string StockInRemark = "Stock In";
+        private const string StockOutRemark = "Stock Out";
+        private const string StockDamagedRemark = "Stock Damaged";
         private readonly MarketDbContext _context = new();
         private readonly User _currentUser;
 
@@ -143,7 +147,7 @@ namespace SuperMarketManagement.ViewModels
         public bool IsManager => string.Equals(_currentUser?.Role, "Manager", StringComparison.OrdinalIgnoreCase);
 
         public Visibility AddButtonVisibility => IsAdmin ? Visibility.Visible : Visibility.Collapsed;
-        public Visibility DeleteColumnVisibility => IsAdmin ? Visibility.Visible : Visibility.Collapsed;
+        public Visibility DeleteColumnVisibility => IsAdmin || IsManager ? Visibility.Visible : Visibility.Collapsed;
         public bool IsNameReadOnly => IsManager;
         public bool IsCategoryEnabled => IsAdmin || IsManager;
         public bool IsUnitReadOnly => IsManager;
@@ -158,12 +162,61 @@ namespace SuperMarketManagement.ViewModels
             _currentUser = user;
 
             AddCommand = new RelayCommand(_ => ExecuteAdd(), _ => IsAdmin);
-            UpdateCommand = new RelayCommand(_ => ExecuteUpdate(), _ => IsAdmin);
-            DeleteCommand = new RelayCommand(ExecuteDelete, _ => IsAdmin);
+            UpdateCommand = new RelayCommand(_ => ExecuteUpdate(), _ => IsAdmin || IsManager);
+            DeleteCommand = new RelayCommand(ExecuteDelete, _ => IsAdmin || IsManager);
             ClearCommand = new RelayCommand(_ => ClearForm());
 
             LoadCategories();
             LoadProducts();
+        }
+
+        private IReadOnlyList<string> GetAllowedTransactionTypes()
+        {
+            try
+            {
+                var connection = _context.Database.GetDbConnection();
+                if (connection.State != System.Data.ConnectionState.Open)
+                {
+                    connection.Open();
+                }
+
+                using var command = connection.CreateCommand();
+                command.CommandText = "SELECT definition FROM sys.check_constraints WHERE name = 'CK_StockTransactions_TransactionType'";
+                var definition = command.ExecuteScalar() as string;
+                if (string.IsNullOrWhiteSpace(definition))
+                {
+                    return Array.Empty<string>();
+                }
+
+                var matches = Regex.Matches(definition, "'([^']+)'", RegexOptions.IgnoreCase);
+                return matches.Select(m => m.Groups[1].Value).Distinct(StringComparer.OrdinalIgnoreCase).ToList();
+            }
+            catch
+            {
+                return Array.Empty<string>();
+            }
+        }
+
+        private string ResolveTransactionType(bool isIncrease, bool isInitial)
+        {
+            var allowedTypes = GetAllowedTransactionTypes();
+            if (allowedTypes.Count == 0)
+            {
+                return isIncrease ? "In" : "Out";
+            }
+
+            if (isInitial)
+            {
+                var initial = allowedTypes.FirstOrDefault(t => t.Contains("initial", StringComparison.OrdinalIgnoreCase));
+                if (!string.IsNullOrWhiteSpace(initial))
+                {
+                    return initial;
+                }
+            }
+
+            var token = isIncrease ? "in" : "out";
+            var match = allowedTypes.FirstOrDefault(t => t.Contains(token, StringComparison.OrdinalIgnoreCase));
+            return !string.IsNullOrWhiteSpace(match) ? match : allowedTypes.First();
         }
 
         private void LoadCategories()
@@ -229,35 +282,46 @@ namespace SuperMarketManagement.ViewModels
             var v = Validate();
             if (!v.IsValid) { MessageBox.Show(v.Message); return; }
 
-            var product = new Product
+            try
             {
-                Name = Name.Trim(),
-                CategoryId = CategoryId,
-                PurchasePrice = v.Pur,
-                SalePrice = v.Sal,
-                Quantity = v.Qty,
-                Unit = Unit.Trim()
-            };
-
-            _context.Products.Add(product);
-            _context.SaveChanges();
-
-            if (v.Qty > 0)
-            {
-                _context.StockTransactions.Add(new StockTransaction
+                var product = new Product
                 {
-                    ProductId = product.Id,
-                    UserId = _currentUser.Id,
-                    TransactionType = "In",
-                    QuantityChanged = v.Qty,
-                    Remarks = "Initial Stock",
-                    TransactionDateTime = DateTime.Now
-                });
-                _context.SaveChanges();
-            }
+                    Name = Name.Trim(),
+                    CategoryId = CategoryId,
+                    PurchasePrice = v.Pur,
+                    SalePrice = v.Sal,
+                    Quantity = v.Qty,
+                    Unit = Unit.Trim()
+                };
 
-            LoadProducts();
-            ClearForm();
+                _context.Products.Add(product);
+                _context.SaveChanges();
+
+                if (v.Qty > 0)
+                {
+                    _context.StockTransactions.Add(new StockTransaction
+                    {
+                        ProductId = product.Id,
+                        UserId = _currentUser.Id,
+                        TransactionType = ResolveTransactionType(isIncrease: true, isInitial: true),
+                        QuantityChanged = v.Qty,
+                        Remarks = StockInRemark,
+                        TransactionDateTime = DateTime.Now
+                    });
+                    _context.SaveChanges();
+                }
+
+                LoadProducts();
+                ClearForm();
+            }
+            catch (DbUpdateException ex)
+            {
+                MessageBox.Show(ex.InnerException?.Message ?? ex.Message);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
 
         private void ExecuteUpdate()
@@ -266,46 +330,68 @@ namespace SuperMarketManagement.ViewModels
             var v = Validate();
             if (!v.IsValid) { MessageBox.Show(v.Message); return; }
 
-            var product = _context.Products.Find(SelectedProduct.Id);
-            if (product == null) return;
-
-            decimal diff = v.Qty - product.Quantity;
-
-            product.Name = Name.Trim();
-            product.CategoryId = CategoryId;
-            product.PurchasePrice = v.Pur;
-            product.SalePrice = v.Sal;
-            product.Quantity = v.Qty;
-            product.Unit = Unit.Trim();
-
-            if (diff != 0)
+            try
             {
-                _context.StockTransactions.Add(new StockTransaction
-                {
-                    ProductId = product.Id,
-                    UserId = _currentUser.Id,
-                    TransactionType = diff > 0 ? "Adjustment-In" : "Adjustment-Out",
-                    QuantityChanged = Math.Abs(diff),
-                    Remarks = "Manual Adjustment",
-                    TransactionDateTime = DateTime.Now
-                });
-            }
+                var product = _context.Products.Find(SelectedProduct.Id);
+                if (product == null) return;
 
-            _context.SaveChanges();
-            LoadProducts();
-            ClearForm();
+                decimal diff = v.Qty - product.Quantity;
+
+                product.Name = Name.Trim();
+                product.CategoryId = CategoryId;
+                product.PurchasePrice = v.Pur;
+                product.SalePrice = v.Sal;
+                product.Quantity = v.Qty;
+                product.Unit = Unit.Trim();
+
+                if (diff != 0)
+                {
+                    _context.StockTransactions.Add(new StockTransaction
+                    {
+                        ProductId = product.Id,
+                        UserId = _currentUser.Id,
+                        TransactionType = ResolveTransactionType(diff > 0, isInitial: false),
+                        QuantityChanged = Math.Abs(diff),
+                        Remarks = diff > 0 ? StockInRemark : StockOutRemark,
+                        TransactionDateTime = DateTime.Now
+                    });
+                }
+
+                _context.SaveChanges();
+                LoadProducts();
+                ClearForm();
+            }
+            catch (DbUpdateException ex)
+            {
+                MessageBox.Show(ex.InnerException?.Message ?? ex.Message);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
 
         private void ExecuteDelete(object? parameter)
         {
             if (parameter is not int id || MessageBox.Show("Delete product?", "Confirm", MessageBoxButton.YesNo) != MessageBoxResult.Yes) return;
-            var product = _context.Products.Find(id);
-            if (product != null)
+            try
             {
-                _context.Products.Remove(product);
-                _context.SaveChanges();
-                LoadProducts();
-                ClearForm();
+                var product = _context.Products.Find(id);
+                if (product != null)
+                {
+                    _context.Products.Remove(product);
+                    _context.SaveChanges();
+                    LoadProducts();
+                    ClearForm();
+                }
+            }
+            catch (DbUpdateException ex)
+            {
+                MessageBox.Show(ex.InnerException?.Message ?? ex.Message);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
             }
         }
 

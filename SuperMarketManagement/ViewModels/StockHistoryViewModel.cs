@@ -35,6 +35,31 @@ namespace SuperMarketManagement.ViewModels
             LoadHistory();
         }
 
+        private static string NormalizeTransactionType(string? transactionType)
+        {
+            if (string.IsNullOrWhiteSpace(transactionType))
+            {
+                return "Unknown";
+            }
+
+            if (transactionType.Contains("damag", StringComparison.OrdinalIgnoreCase))
+            {
+                return "Stock Damaged";
+            }
+
+            if (transactionType.Contains("out", StringComparison.OrdinalIgnoreCase))
+            {
+                return "Stock Out";
+            }
+
+            if (transactionType.Contains("in", StringComparison.OrdinalIgnoreCase))
+            {
+                return "Stock In";
+            }
+
+            return transactionType;
+        }
+
         private void LoadHistory()
         {
             var query = _context.StockTransactions
@@ -44,7 +69,7 @@ namespace SuperMarketManagement.ViewModels
                     TransactionDateTime = st.TransactionDateTime,
                     ProductName = _context.Products.Where(p => p.Id == st.ProductId).Select(p => p.Name).FirstOrDefault() ?? "Unknown",
                     UserName = _context.Users.Where(u => u.Id == st.UserId).Select(u => u.Name).FirstOrDefault() ?? "Unknown",
-                    TransactionType = st.TransactionType,
+                    TransactionType = NormalizeTransactionType(st.TransactionType),
                     QuantityChanged = st.QuantityChanged,
                     Remarks = st.Remarks
                 });

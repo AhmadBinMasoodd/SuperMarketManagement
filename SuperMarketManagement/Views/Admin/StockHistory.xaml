@@ -10,7 +10,7 @@
     <Grid Margin="8">
         <Border Background="#FFFFFF"
                 Padding="16"
-                CornerRadius="12"
+                CornerRadius="14"
                 BorderBrush="#E2E8F0"
                 BorderThickness="1">
             <Grid>
@@ -37,6 +37,10 @@
                              Height="34"
                              FontSize="13"
                              VerticalAlignment="Center"
+                             Padding="10,0"
+                             Background="#F8FAFC"
+                             BorderBrush="#E2E8F0"
+                             BorderThickness="1"
                              ToolTip="Search by product, user, or type"
                              Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"/>
                 </DockPanel>
@@ -49,13 +53,15 @@
                           RowBackground="#FFFFFF"
                           AlternatingRowBackground="#F8FAFC"
                           RowHeaderWidth="0"
-                          BorderThickness="0"
+                          BorderThickness="1"
+                          BorderBrush="#E2E8F0"
                           HorizontalGridLinesBrush="#E2E8F0"
                           VerticalGridLinesBrush="#EEF2F7"
                           SelectionUnit="FullRow"
                           AutoGenerateColumns="False"
                           IsReadOnly="True"
-                          CanUserAddRows="False">
+                          CanUserAddRows="False"
+                          ItemsSource="{Binding History}">
                     <DataGrid.Resources>
                         <Style TargetType="DataGridColumnHeader">
                             <Setter Property="Background" Value="#F3F0FF"/>
@@ -79,6 +85,14 @@
                                     <Setter Property="Background" Value="#EDE9FE"/>
                                     <Setter Property="BorderBrush" Value="#DDD6FE"/>
                                     <Setter Property="Foreground" Value="#1E293B"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                        <Style TargetType="DataGridRow">
+                            <Setter Property="Height" Value="40"/>
+                            <Style.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Background" Value="#EEF2FF"/>
                                 </Trigger>
                             </Style.Triggers>
                         </Style>
