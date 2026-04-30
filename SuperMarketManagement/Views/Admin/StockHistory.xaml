@@ -38,7 +38,7 @@
                              FontSize="13"
                              VerticalAlignment="Center"
                              ToolTip="Search by product, user, or type"
-                             TextChanged="SearchTextBox_TextChanged"/>
+                             Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"/>
                 </DockPanel>
 
                 <DataGrid Grid.Row="2"

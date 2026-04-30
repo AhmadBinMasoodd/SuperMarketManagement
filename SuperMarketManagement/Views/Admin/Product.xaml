@@ -23,6 +23,7 @@
 
         <Style x:Key="InputStyle" TargetType="Control">
             <Setter Property="Height" Value="36"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
             <Setter Property="FontSize" Value="13"/>
         </Style>
 
@@ -139,37 +140,42 @@
 
                 <StackPanel Grid.Row="1" Grid.Column="0">
                     <TextBlock Text="Product Name" Style="{StaticResource LabelStyle}"/>
-                    <TextBox x:Name="ProductNameTextBox" Style="{StaticResource InputStyle}"/>
+                    <TextBox x:Name="ProductNameTextBox" Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="{Binding IsNameReadOnly}" Style="{StaticResource InputStyle}"/>
                 </StackPanel>
 
                 <StackPanel Grid.Row="1" Grid.Column="2">
                     <TextBlock Text="Category" Style="{StaticResource LabelStyle}"/>
-                    <ComboBox x:Name="CategoryComboBox" Style="{StaticResource InputStyle}" DisplayMemberPath="Name" SelectedValuePath="Id"/>
+                    <ComboBox x:Name="CategoryComboBox" 
+                              ItemsSource="{Binding Categories}" 
+                              DisplayMemberPath="Display" 
+                              SelectedItem="{Binding SelectedCategory, Mode=TwoWay}" 
+                              IsEnabled="{Binding IsCategoryEnabled}" 
+                              Style="{StaticResource InputStyle}"/>
                 </StackPanel>
 
                 <StackPanel Grid.Row="1" Grid.Column="4">
                     <TextBlock Text="Purchase Price" Style="{StaticResource LabelStyle}"/>
-                    <TextBox x:Name="PurchasePriceTextBox" Style="{StaticResource InputStyle}"/>
+                    <TextBox x:Name="PurchasePriceTextBox" Text="{Binding PurchasePrice, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource InputStyle}"/>
                 </StackPanel>
 
                 <StackPanel Grid.Row="1" Grid.Column="6">
                     <TextBlock Text="Sale Price" Style="{StaticResource LabelStyle}"/>
-                    <TextBox x:Name="SalePriceTextBox" Style="{StaticResource InputStyle}"/>
+                    <TextBox x:Name="SalePriceTextBox" Text="{Binding SalePrice, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource InputStyle}"/>
                 </StackPanel>
 
                 <StackPanel Grid.Row="2" Grid.Column="0" Margin="0,8,0,0">
                     <TextBlock Text="Quantity" Style="{StaticResource LabelStyle}"/>
-                    <TextBox x:Name="QuantityTextBox" Style="{StaticResource InputStyle}"/>
+                    <TextBox x:Name="QuantityTextBox" Text="{Binding Quantity, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource InputStyle}"/>
                 </StackPanel>
 
                 <StackPanel Grid.Row="2" Grid.Column="2" Margin="0,8,0,0">
                     <TextBlock Text="Unit" Style="{StaticResource LabelStyle}"/>
-                    <TextBox x:Name="UnitTextBox" Style="{StaticResource InputStyle}"/>
+                    <TextBox x:Name="UnitTextBox" Text="{Binding Unit, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="{Binding IsUnitReadOnly}" Style="{StaticResource InputStyle}"/>
                 </StackPanel>
 
                 <StackPanel Grid.Row="2" Grid.Column="6" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,8,0,0">
-                    <Button x:Name="AddProductButton" Style="{StaticResource ActionButtonStyle}" Content="Add" Width="96" Margin="0,0,8,0" Click="AddProductButton_Click"/>
-                    <Button x:Name="UpdateProductButton" Style="{StaticResource ActionButtonStyle}" Content="Update" Width="96" Click="UpdateProductButton_Click"/>
+                    <Button x:Name="AddProductButton" Visibility="{Binding AddButtonVisibility}" Command="{Binding AddCommand}" Style="{StaticResource ActionButtonStyle}" Content="Add" Width="96" Margin="0,0,8,0"/>
+                    <Button x:Name="UpdateProductButton" Command="{Binding UpdateCommand}" Style="{StaticResource ActionButtonStyle}" Content="Update" Width="96"/>
                 </StackPanel>
             </Grid>
         </Border>
@@ -201,7 +207,7 @@
                              FontSize="13"
                              VerticalAlignment="Center"
                              ToolTip="Search by product, category, or unit"
-                             TextChanged="SearchTextBox_TextChanged"/>
+                             Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"/>
                 </DockPanel>
 
                 <DataGrid Grid.Row="2"
@@ -220,7 +226,8 @@
                           IsReadOnly="True"
                           CanUserAddRows="False"
                           SelectionMode="Single"
-                          SelectionChanged="ProductDataGrid_SelectionChanged">
+                          ItemsSource="{Binding Products}"
+                          SelectedItem="{Binding SelectedProduct}">
                     <DataGrid.Resources>
                         <Style TargetType="DataGridColumnHeader">
                             <Setter Property="Background" Value="#F3F0FF"/>
@@ -268,10 +275,12 @@
                         <DataGridTextColumn Header="Sale" Binding="{Binding SalePrice}" Width="90"/>
                         <DataGridTextColumn Header="Quantity" Binding="{Binding Quantity}" Width="90"/>
                         <DataGridTextColumn Header="Unit" Binding="{Binding Unit}" Width="90"/>
-                        <DataGridTemplateColumn Header="Delete" Width="70">
+                        <DataGridTemplateColumn Header="Delete" Width="70" Visibility="{Binding DataContext.DeleteColumnVisibility, RelativeSource={RelativeSource AncestorType=UserControl}}">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
-                                    <Button Style="{StaticResource GridDeleteButtonStyle}" Tag="{Binding Id}" Click="DeleteProductButton_Click">
+                                    <Button Style="{StaticResource GridDeleteButtonStyle}" 
+                                            Command="{Binding DataContext.DeleteCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}"
+                                            CommandParameter="{Binding Id}">
                                         <Icons:PackIconMaterial Kind="Delete" Width="16" Height="16" Foreground="White"/>
                                     </Button>
                                 </DataTemplate>

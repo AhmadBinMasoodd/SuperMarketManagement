@@ -5,9 +5,13 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:Icons="http://metro.mahapps.com/winfx/xaml/iconpacks"
              xmlns:local="clr-namespace:SuperMarketManagement.Views.Admin"
+             xmlns:vm="clr-namespace:SuperMarketManagement.ViewModels"
              mc:Ignorable="d" 
              FontFamily="Segoe UI"
              d:DesignHeight="650" d:DesignWidth="980">
+    <UserControl.DataContext>
+        <vm:EmployeeViewModel/>
+    </UserControl.DataContext>
     <UserControl.Resources>
         <SolidColorBrush x:Key="PrimaryBrush" Color="#623ED0"/>
         <SolidColorBrush x:Key="PrimaryLightBrush" Color="#7C5AE5"/>
@@ -24,6 +28,7 @@
 
         <Style x:Key="InputStyle" TargetType="Control">
             <Setter Property="Height" Value="36"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
             <Setter Property="FontSize" Value="13"/>
         </Style>
 
@@ -155,17 +160,17 @@
 
                 <StackPanel Grid.Row="1" Grid.Column="0">
                     <TextBlock Text="Name" Style="{StaticResource LabelStyle}"/>
-                    <TextBox x:Name="NameTextBox" Style="{StaticResource InputStyle}"/>
+                    <TextBox x:Name="NameTextBox" Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource InputStyle}"/>
                 </StackPanel>
 
                 <StackPanel Grid.Row="1" Grid.Column="2">
                     <TextBlock Text="Age" Style="{StaticResource LabelStyle}"/>
-                    <TextBox x:Name="AgeTextBox" Style="{StaticResource InputStyle}"/>
+                    <TextBox x:Name="AgeTextBox" Text="{Binding Age, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource InputStyle}"/>
                 </StackPanel>
 
                 <StackPanel Grid.Row="1" Grid.Column="4">
                     <TextBlock Text="Gender" Style="{StaticResource LabelStyle}"/>
-                    <ComboBox x:Name="GenderComboBox" Style="{StaticResource InputStyle}">
+                    <ComboBox x:Name="GenderComboBox" SelectedValue="{Binding Gender, UpdateSourceTrigger=PropertyChanged}" SelectedValuePath="Content" Style="{StaticResource InputStyle}">
                         <ComboBoxItem Content="Male"/>
                         <ComboBoxItem Content="Female"/>
                     </ComboBox>
@@ -173,7 +178,7 @@
 
                 <StackPanel Grid.Row="1" Grid.Column="6">
                     <TextBlock Text="Role" Style="{StaticResource LabelStyle}"/>
-                    <ComboBox x:Name="RoleComboBox" Style="{StaticResource InputStyle}">
+                    <ComboBox x:Name="RoleComboBox" SelectedValue="{Binding Role, UpdateSourceTrigger=PropertyChanged}" SelectedValuePath="Content" Style="{StaticResource InputStyle}">
                         <ComboBoxItem Content="Cashier"/>
                         <ComboBoxItem Content="Manager"/>
                     </ComboBox>
@@ -181,22 +186,22 @@
 
                 <StackPanel Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3" Margin="0,8,0,0">
                     <TextBlock Text="Address" Style="{StaticResource LabelStyle}"/>
-                    <TextBox x:Name="AddressTextBox" Style="{StaticResource InputStyle}"/>
+                    <TextBox x:Name="AddressTextBox" Text="{Binding Address, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource InputStyle}"/>
                 </StackPanel>
 
                 <StackPanel Grid.Row="2" Grid.Column="4" Margin="0,8,0,0">
                     <TextBlock Text="Username" Style="{StaticResource LabelStyle}"/>
-                    <TextBox x:Name="UsernameTextBox" Style="{StaticResource InputStyle}"/>
+                    <TextBox x:Name="UsernameTextBox" Text="{Binding Username, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource InputStyle}"/>
                 </StackPanel>
 
                 <StackPanel Grid.Row="2" Grid.Column="6" Margin="0,8,0,0">
                     <TextBlock Text="Password" Style="{StaticResource LabelStyle}"/>
-                    <TextBox x:Name="PasswordTextBox" Style="{StaticResource InputStyle}"/>
+                    <TextBox x:Name="PasswordTextBox" Text="{Binding Password, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource InputStyle}"/>
                 </StackPanel>
 
                 <StackPanel Grid.Row="3" Grid.Column="0" Margin="0,8,0,0">
                     <TextBlock Text="Salary" Style="{StaticResource LabelStyle}"/>
-                    <TextBox x:Name="SalaryTextBox" Style="{StaticResource InputStyle}"/>
+                    <TextBox x:Name="SalaryTextBox" Text="{Binding Salary, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource InputStyle}"/>
                 </StackPanel>
 
                 <StackPanel Grid.Row="3" Grid.Column="6" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,8,0,0">
@@ -205,12 +210,12 @@
                             Content="Add"
                             Width="96"
                             Margin="0,0,8,0"
-                            Click="AddButton_Click"/>
+                            Command="{Binding AddCommand}"/>
                     <Button x:Name="UpdateButton"
                             Style="{StaticResource ActionButtonStyle}"
                             Content="Update"
                             Width="96"
-                            Click="UpdateButton_Click"/>
+                            Command="{Binding UpdateCommand}"/>
                 </StackPanel>
             </Grid>
         </Border>
@@ -237,7 +242,8 @@
                       IsReadOnly="True"
                       CanUserAddRows="False"
                       SelectionMode="Single"
-                      SelectionChanged="EmployeeDataGrid_SelectionChanged">
+                      ItemsSource="{Binding Employees}"
+                      SelectedItem="{Binding SelectedEmployee}">
                 <DataGrid.Resources>
                     <Style TargetType="DataGridColumnHeader">
                         <Setter Property="Background" Value="#F3F0FF"/>
@@ -291,8 +297,8 @@
                                 <Button Style="{StaticResource GridDeleteButtonStyle}"
                                         Width="34"
                                         HorizontalAlignment="Center"
-                                        Tag="{Binding Id}"
-                                        Click="DeleteRowButton_Click">
+                                        Command="{Binding DataContext.DeleteCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}"
+                                        CommandParameter="{Binding}">
                                     <Icons:PackIconMaterial Kind="Delete" Width="16" Height="16" Foreground="White"/>
                                 </Button>
                             </DataTemplate>

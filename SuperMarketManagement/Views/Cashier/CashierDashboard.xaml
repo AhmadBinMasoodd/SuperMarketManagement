@@ -1,10 +1,10 @@
-<Window x:Class="SuperMarketManagement.Views.Admin.AdminDashboard"
+<Window x:Class="SuperMarketManagement.Views.Cashier.CashierDashboard"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:shell="clr-namespace:System.Windows.Shell;assembly=PresentationFramework"
-        xmlns:local="clr-namespace:SuperMarketManagement.Views.Admin"
+        xmlns:local="clr-namespace:SuperMarketManagement.Views.Cashier"
         xmlns:Icons="http://metro.mahapps.com/winfx/xaml/iconpacks"
         mc:Ignorable="d"
         WindowStartupLocation="CenterScreen"
@@ -13,7 +13,7 @@
         SizeToContent="Manual"
         AllowsTransparency="False"
         Background="#EFF2F7"
-        Title="AdminDashboard"
+        Title="CashierDashboard"
         Height="760"
         Width="1280"
         MinHeight="560"
@@ -159,7 +159,7 @@
                                            FontSize="20"
                                            FontWeight="SemiBold"
                                            Foreground="#1E293B"/>
-                                <TextBlock Text="Admin Dashboard"
+                                <TextBlock Text="Cashier Dashboard"
                                            FontSize="12"
                                            Foreground="#64748B"
                                            Margin="0,2,0,0"/>
@@ -167,6 +167,8 @@
                         </StackPanel>
 
                         <Button DockPanel.Dock="Right"
+                                Name="CloseBtn"
+                                Click="CloseBtn_Click"
                                 Style="{StaticResource AppBarCloseButtonStyle}"
                                 VerticalAlignment="Center">
                             <Icons:PackIconMaterial Kind="Close"
@@ -186,25 +188,27 @@
                     Padding="16,16,12,16">
                 <DockPanel LastChildFill="True">
                     <StackPanel DockPanel.Dock="Top" Margin="0,0,0,18">
-                        <TextBlock Text="SuperStore"
+                        <TextBlock x:Name="CashierNameText" Text="Cashier Name"
                                    FontSize="20"
                                    FontWeight="Bold"
-                                   Foreground="White"/>
-                        <TextBlock Text="Admin Panel"
+                                   Foreground="White"
+                                   TextWrapping="Wrap"/>
+                        <TextBlock x:Name="CashierRoleText" Text="Cashier"
                                    Margin="0,3,0,0"
                                    FontSize="12"
                                    Foreground="#DDD6FE"/>
                     </StackPanel>
 
                     <Button DockPanel.Dock="Bottom"
+                            Name="LogoutBtn"
+                            Click="LogoutBtn_Click"
                             Height="44"
                             Margin="0,12,0,0"
                             Background="#5B21B6"
                             BorderBrush="#A78BFA"
                             BorderThickness="1"
                             HorizontalContentAlignment="Left"
-                            Padding="12,0"
-                            Command="{Binding LogoutCommand}">
+                            Padding="12,0">
                         <DockPanel>
                             <Icons:PackIconMaterial Kind="Logout" Width="18" Height="18" Foreground="White" Margin="0,0,10,0"/>
                             <TextBlock Text="Logout" Foreground="White" VerticalAlignment="Center" FontWeight="SemiBold"/>
@@ -220,99 +224,31 @@
                                        FontWeight="SemiBold"
                                        Margin="8,0,0,8"/>
 
-                            <Button Name="DashboardButton" Command="{Binding NavigateDashboardCommand}">
-                                <Button.Style>
-                                    <Style TargetType="Button" BasedOn="{StaticResource SideMenuButtonStyle}">
-                                        <Style.Triggers>
-                                            <DataTrigger Binding="{Binding ActiveMenu}" Value="Dashboard">
-                                                <Setter Property="Background" Value="#7C5AE5"/>
-                                                <Setter Property="BorderBrush" Value="#C4B5FD"/>
-                                                <Setter Property="Foreground" Value="White"/>
-                                            </DataTrigger>
-                                        </Style.Triggers>
-                                    </Style>
-                                </Button.Style>
+                            <Button Name="POSBtn" Click="POSButton_Click" Style="{StaticResource SideMenuButtonStyle}">
                                 <DockPanel>
-                                    <Icons:PackIconMaterial Kind="ViewDashboard" Width="18" Height="18" Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}" Margin="0,0,10,0"/>
-                                    <TextBlock Text="Dashboard" Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}" VerticalAlignment="Center" FontWeight="SemiBold"/>
+                                    <Icons:PackIconMaterial Kind="CashRegister" Width="18" Height="18" Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}" Margin="0,0,10,0"/>
+                                    <TextBlock Text="Point of Sale" Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}" VerticalAlignment="Center" FontWeight="SemiBold"/>
                                 </DockPanel>
                             </Button>
 
-                            <Button Style="{StaticResource SideMenuButtonStyle}">
+                            <Button Name="ReturnRefundBtn" Click="ReturnRefundButton_Click" Style="{StaticResource SideMenuButtonStyle}">
                                 <DockPanel>
-                                    <Icons:PackIconMaterial Kind="FileChart" Width="18" Height="18" Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}" Margin="0,0,10,0"/>
-                                    <TextBlock Text="Sales Reports" Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}" VerticalAlignment="Center"/>
+                                    <Icons:PackIconMaterial Kind="CashRefund" Width="18" Height="18" Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}" Margin="0,0,10,0"/>
+                                    <TextBlock Text="Return / Refund" Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}" VerticalAlignment="Center"/>
                                 </DockPanel>
                             </Button>
 
-                            <Button Name="EmployeesButton" Command="{Binding NavigateEmployeesCommand}">
-                                <Button.Style>
-                                    <Style TargetType="Button" BasedOn="{StaticResource SideMenuButtonStyle}">
-                                        <Style.Triggers>
-                                            <DataTrigger Binding="{Binding ActiveMenu}" Value="Employees">
-                                                <Setter Property="Background" Value="#7C5AE5"/>
-                                                <Setter Property="BorderBrush" Value="#C4B5FD"/>
-                                                <Setter Property="Foreground" Value="White"/>
-                                            </DataTrigger>
-                                        </Style.Triggers>
-                                    </Style>
-                                </Button.Style>
+                            <Button Name="DailySummaryBtn" Click="DailySummaryButton_Click" Style="{StaticResource SideMenuButtonStyle}">
                                 <DockPanel>
-                                    <Icons:PackIconMaterial Kind="AccountGroup" Width="18" Height="18" Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}" Margin="0,0,10,0"/>
-                                    <TextBlock Text="Employees" Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}" VerticalAlignment="Center"/>
+                                    <Icons:PackIconMaterial Kind="ChartBox" Width="18" Height="18" Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}" Margin="0,0,10,0"/>
+                                    <TextBlock Text="Daily Summary" Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}" VerticalAlignment="Center"/>
                                 </DockPanel>
                             </Button>
 
-                            <Button Name="CategoryButton" Command="{Binding NavigateCategoryCommand}">
-                                <Button.Style>
-                                    <Style TargetType="Button" BasedOn="{StaticResource SideMenuButtonStyle}">
-                                        <Style.Triggers>
-                                            <DataTrigger Binding="{Binding ActiveMenu}" Value="Category">
-                                                <Setter Property="Background" Value="#7C5AE5"/>
-                                                <Setter Property="BorderBrush" Value="#C4B5FD"/>
-                                                <Setter Property="Foreground" Value="White"/>
-                                            </DataTrigger>
-                                        </Style.Triggers>
-                                    </Style>
-                                </Button.Style>
+                            <Button Name="ProfileBtn" Click="ProfileButton_Click" Style="{StaticResource SideMenuButtonStyle}">
                                 <DockPanel>
-                                    <Icons:PackIconMaterial Kind="Cart" Width="18" Height="18" Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}" Margin="0,0,10,0"/>
-                                    <TextBlock Text="Categories" Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}" VerticalAlignment="Center"/>
-                                </DockPanel>
-                            </Button>
-                            
-                            <Button Name="ProductBtn" Command="{Binding NavigateProductCommand}">
-                                <Button.Style>
-                                    <Style TargetType="Button" BasedOn="{StaticResource SideMenuButtonStyle}">
-                                        <Style.Triggers>
-                                            <DataTrigger Binding="{Binding ActiveMenu}" Value="Product">
-                                                <Setter Property="Background" Value="#7C5AE5"/>
-                                                <Setter Property="BorderBrush" Value="#C4B5FD"/>
-                                                <Setter Property="Foreground" Value="White"/>
-                                            </DataTrigger>
-                                        </Style.Triggers>
-                                    </Style>
-                                </Button.Style>
-                                <DockPanel>
-                                    <Icons:PackIconMaterial Kind="PackageVariantClosed" Width="18" Height="18" Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}" Margin="0,0,10,0"/>
-                                    <TextBlock Text="Products" Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}" VerticalAlignment="Center"/>
-                                </DockPanel>
-                            </Button>
-                            <Button Name="StockHistoryBtn" Command="{Binding NavigateStockHistoryCommand}">
-                                <Button.Style>
-                                    <Style TargetType="Button" BasedOn="{StaticResource SideMenuButtonStyle}">
-                                        <Style.Triggers>
-                                            <DataTrigger Binding="{Binding ActiveMenu}" Value="StockHistory">
-                                                <Setter Property="Background" Value="#7C5AE5"/>
-                                                <Setter Property="BorderBrush" Value="#C4B5FD"/>
-                                                <Setter Property="Foreground" Value="White"/>
-                                            </DataTrigger>
-                                        </Style.Triggers>
-                                    </Style>
-                                </Button.Style>
-                                <DockPanel>
-                                    <Icons:PackIconMaterial Kind="History" Width="18" Height="18" Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}" Margin="0,0,10,0"/>
-                                    <TextBlock Text="Stock History" Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}" VerticalAlignment="Center"/>
+                                    <Icons:PackIconMaterial Kind="Account" Width="18" Height="18" Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}" Margin="0,0,10,0"/>
+                                    <TextBlock Text="My Profile" Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}" VerticalAlignment="Center"/>
                                 </DockPanel>
                             </Button>
                         </StackPanel>
@@ -326,7 +262,7 @@
                     Padding="18"
                     Background="White"
                     CornerRadius="14">
-                <ContentControl x:Name="MainContentHost" Content="{Binding CurrentView}"/>
+                <ContentControl x:Name="MainContentHost"/>
             </Border>
 
             <GridSplitter Grid.Row="1"
