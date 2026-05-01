@@ -13,26 +13,40 @@ namespace SuperMarketManagement.Services
 
         public IReadOnlyList<StockHistoryGridItemViewModel> GetHistory(string? searchText)
         {
-            var query = _context.StockTransactions
-                .AsNoTracking()
-                .OrderByDescending(st => st.TransactionDateTime)
-                .Select(st => new StockHistoryGridItemViewModel
-                {
-                    TransactionDateTime = st.TransactionDateTime,
-                    ProductName = _context.Products.Where(p => p.Id == st.ProductId).Select(p => p.Name).FirstOrDefault() ?? "Unknown",
-                    UserName = _context.Users.Where(u => u.Id == st.UserId).Select(u => u.Name).FirstOrDefault() ?? "Unknown",
-                    TransactionType = NormalizeTransactionType(st.TransactionType),
-                    QuantityChanged = st.QuantityChanged,
-                    Remarks = st.Remarks
-                });
+            var query = from st in _context.StockTransactions.AsNoTracking()
+                        join p in _context.Products.AsNoTracking() on st.ProductId equals p.Id into productJoin
+                        from p in productJoin.DefaultIfEmpty()
+                        join u in _context.Users.AsNoTracking() on st.UserId equals u.Id into userJoin
+                        from u in userJoin.DefaultIfEmpty()
+                        orderby st.TransactionDateTime descending
+                        select new StockHistoryGridItemViewModel
+                        {
+                            TransactionDateTime = st.TransactionDateTime,
+                            ProductName = p != null ? p.Name : "Unknown",
+                            UserName = u != null ? u.Name : "Unknown",
+                            TransactionType = st.TransactionType,
+                            QuantityChanged = st.QuantityChanged,
+                            Remarks = st.Remarks
+                        };
+
+            var items = query.ToList();
+
+            foreach (var item in items)
+            {
+                item.TransactionType = NormalizeTransactionType(item.TransactionType);
+            }
 
             if (!string.IsNullOrWhiteSpace(searchText))
             {
                 var text = searchText.Trim().ToLower();
-                query = query.Where(x => x.ProductName.ToLower().Contains(text) || x.UserName.ToLower().Contains(text) || x.TransactionType.ToLower().Contains(text));
+                items = items
+                    .Where(x => x.ProductName.ToLower().Contains(text)
+                        || x.UserName.ToLower().Contains(text)
+                        || x.TransactionType.ToLower().Contains(text))
+                    .ToList();
             }
 
-            return query.ToList();
+            return items;
         }
 
         private static string NormalizeTransactionType(string? transactionType)

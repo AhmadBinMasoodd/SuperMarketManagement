@@ -1,6 +1,9 @@
 using System;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Documents;
 using System.Windows.Input;
 using SuperMarketManagement.Models;
 using SuperMarketManagement.Services;
@@ -119,6 +122,7 @@ namespace SuperMarketManagement.ViewModels
         }
 
         public ICommand AddToBillCommand { get; }
+        public ICommand GenerateBillCommand { get; }
 
         private int? _lastAutoAddProductId;
         private DateTime _lastAutoAddTime;
@@ -127,6 +131,7 @@ namespace SuperMarketManagement.ViewModels
         {
             _currentUser = user;
             AddToBillCommand = new RelayCommand(ExecuteAddToBill);
+            GenerateBillCommand = new RelayCommand(_ => ExecuteGenerateBill());
             LoadProducts();
         }
 
@@ -194,6 +199,130 @@ namespace SuperMarketManagement.ViewModels
         {
             _selectedProduct = null;
             OnPropertyChanged(nameof(SelectedProduct));
+        }
+
+        private void ExecuteGenerateBill()
+        {
+            try
+            {
+                var billSnapshot = BillItems.Select(item => new BillItem
+                {
+                    ProductId = item.ProductId,
+                    SrNo = item.SrNo,
+                    Name = item.Name,
+                    Quantity = item.Quantity,
+                    UnitPrice = item.UnitPrice
+                }).ToList();
+
+                var saleId = _salesService.CreateSale(_currentUser.Id, billSnapshot);
+                PrintBill(saleId, billSnapshot, GrandTotal);
+
+                MessageBox.Show($"Sale #{saleId} saved successfully.");
+                BillItems.Clear();
+                GrandTotal = 0;
+                LoadProducts();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private void PrintBill(int saleId, IReadOnlyCollection<BillItem> items, decimal total)
+        {
+            var dialog = new PrintDialog();
+            if (dialog.ShowDialog() != true)
+            {
+                return;
+            }
+
+            var document = new FlowDocument
+            {
+                FontFamily = new System.Windows.Media.FontFamily("Segoe UI"),
+                FontSize = 11,
+                PageWidth = dialog.PrintableAreaWidth,
+                PageHeight = dialog.PrintableAreaHeight,
+                PagePadding = new Thickness(24)
+            };
+            document.ColumnWidth = dialog.PrintableAreaWidth;
+
+            document.Blocks.Add(new Paragraph(new Run("Super Market"))
+            {
+                FontSize = 18,
+                FontWeight = FontWeights.Bold,
+                TextAlignment = TextAlignment.Center,
+                Margin = new Thickness(0, 0, 0, 2)
+            });
+
+            document.Blocks.Add(new Paragraph(new Run("Sales Receipt"))
+            {
+                FontSize = 14,
+                FontWeight = FontWeights.SemiBold,
+                TextAlignment = TextAlignment.Center,
+                Margin = new Thickness(0, 0, 0, 10)
+            });
+
+            document.Blocks.Add(new Paragraph(new Run($"Receipt #: {saleId}")) { Margin = new Thickness(0, 0, 0, 2) });
+            document.Blocks.Add(new Paragraph(new Run($"Cashier: {_currentUser.Name}")) { Margin = new Thickness(0, 0, 0, 2) });
+            document.Blocks.Add(new Paragraph(new Run($"Date: {DateTime.Now:g}")) { Margin = new Thickness(0, 0, 0, 8) });
+
+            document.Blocks.Add(new Paragraph(new Run(new string('-', 48)))
+            {
+                FontSize = 11,
+                Foreground = System.Windows.Media.Brushes.Gray,
+                Margin = new Thickness(0, 0, 0, 6)
+            });
+
+            var table = new Table
+            {
+                CellSpacing = 6
+            };
+            table.Columns.Add(new TableColumn { Width = new GridLength(0.6, GridUnitType.Star) });
+            table.Columns.Add(new TableColumn { Width = new GridLength(3.2, GridUnitType.Star) });
+            table.Columns.Add(new TableColumn { Width = new GridLength(0.9, GridUnitType.Star) });
+            table.Columns.Add(new TableColumn { Width = new GridLength(1.2, GridUnitType.Star) });
+            table.Columns.Add(new TableColumn { Width = new GridLength(1.3, GridUnitType.Star) });
+
+            var header = new TableRowGroup();
+            var headerRow = new TableRow();
+            headerRow.Cells.Add(new TableCell(new Paragraph(new Run("#")) { TextAlignment = TextAlignment.Left }) { FontWeight = FontWeights.Bold });
+            headerRow.Cells.Add(new TableCell(new Paragraph(new Run("Item")) { TextAlignment = TextAlignment.Left }) { FontWeight = FontWeights.Bold });
+            headerRow.Cells.Add(new TableCell(new Paragraph(new Run("Qty")) { TextAlignment = TextAlignment.Right }) { FontWeight = FontWeights.Bold });
+            headerRow.Cells.Add(new TableCell(new Paragraph(new Run("Unit (PKR)")) { TextAlignment = TextAlignment.Right }) { FontWeight = FontWeights.Bold });
+            headerRow.Cells.Add(new TableCell(new Paragraph(new Run("Total (PKR)")) { TextAlignment = TextAlignment.Right }) { FontWeight = FontWeights.Bold });
+            header.Rows.Add(headerRow);
+            table.RowGroups.Add(header);
+
+            var rows = new TableRowGroup();
+            foreach (var item in items)
+            {
+                var row = new TableRow();
+                row.Cells.Add(new TableCell(new Paragraph(new Run(item.SrNo.ToString())) { TextAlignment = TextAlignment.Left }));
+                row.Cells.Add(new TableCell(new Paragraph(new Run(item.Name)) { TextAlignment = TextAlignment.Left }));
+                row.Cells.Add(new TableCell(new Paragraph(new Run(item.Quantity.ToString("N0")))
+                {
+                    TextAlignment = TextAlignment.Right
+                }));
+                row.Cells.Add(new TableCell(new Paragraph(new Run(item.UnitPrice.ToString("N2")))
+                {
+                    TextAlignment = TextAlignment.Right
+                }));
+                row.Cells.Add(new TableCell(new Paragraph(new Run(item.Total.ToString("N2")))
+                {
+                    TextAlignment = TextAlignment.Right
+                }));
+                rows.Rows.Add(row);
+            }
+            table.RowGroups.Add(rows);
+
+            document.Blocks.Add(table);
+            document.Blocks.Add(new Paragraph(new Run($"Grand Total (PKR): {total:N2}"))
+            {
+                FontWeight = FontWeights.Bold,
+                Margin = new Thickness(0, 12, 0, 0)
+            });
+
+            dialog.PrintDocument(((IDocumentPaginatorSource)document).DocumentPaginator, $"Sale {saleId}");
         }
 
         public void Dispose() => _salesService.Dispose();

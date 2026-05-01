@@ -19,5 +19,6 @@ public partial class SaleItem
     public decimal UnitPrice { get; set; }
 
     [Column(TypeName = "decimal(18, 2)")]
+    [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
     public decimal LineTotal { get; set; }
 }

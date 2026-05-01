@@ -194,7 +194,7 @@
 
                 <StackPanel Grid.Row="2" Grid.Column="1" Margin="16,0,0,0" VerticalAlignment="Bottom">
                     <TextBlock Text="{Binding GrandTotal, StringFormat=Grand Total (PKR): {0:N2}}" FontSize="22" FontWeight="Bold" Foreground="{StaticResource TextPrimaryBrush}" HorizontalAlignment="Right" Margin="0,0,0,16"/>
-                    <Button Content="Generate Bill" Style="{StaticResource ActionButtonStyle}"/>
+                    <Button Content="Generate Bill" Style="{StaticResource ActionButtonStyle}" Command="{Binding GenerateBillCommand}"/>
                 </StackPanel>
             </Grid>
         </Border>
