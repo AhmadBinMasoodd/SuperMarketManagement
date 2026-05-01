@@ -8,8 +8,8 @@
                 <TextBlock Text="Return &amp; Refund" FontSize="24" FontWeight="SemiBold" Foreground="#1E293B" Margin="0,0,0,16"/>
                 <TextBlock Text="Search Receipt ID:" Foreground="#64748B" Margin="0,0,0,4"/>
                 <StackPanel Orientation="Horizontal" Margin="0,0,0,24">
-                    <TextBox Width="200" Height="36" Margin="0,0,16,0" Padding="8,0"/>
-                    <Button Content="Search" Width="100" Height="36" Background="#623ED0" Foreground="White" FontWeight="SemiBold"/>
+                    <TextBox Width="200" Height="36" Margin="0,0,16,0" Padding="8,0" Name="SearchTextBox"/>
+                    <Button Content="Search" Width="100" Height="36" Background="#623ED0" Foreground="White" FontWeight="SemiBold" Click="SearchButton_Click"/>
                 </StackPanel>
                 <TextBlock Text="Receipt Details will appear here..." Foreground="#94A3B8" FontStyle="Italic" HorizontalAlignment="Center" Margin="0,40,0,0"/>
             </StackPanel>

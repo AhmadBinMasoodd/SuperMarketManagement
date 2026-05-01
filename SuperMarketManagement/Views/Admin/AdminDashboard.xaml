@@ -238,12 +238,7 @@
                                 </DockPanel>
                             </Button>
 
-                            <Button Style="{StaticResource SideMenuButtonStyle}">
-                                <DockPanel>
-                                    <Icons:PackIconMaterial Kind="FileChart" Width="18" Height="18" Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}" Margin="0,0,10,0"/>
-                                    <TextBlock Text="Sales Reports" Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}" VerticalAlignment="Center"/>
-                                </DockPanel>
-                            </Button>
+                        
 
                             <Button Name="EmployeesButton" Command="{Binding NavigateEmployeesCommand}">
                                 <Button.Style>

@@ -1,4 +1,5 @@
 using System.Windows.Controls;
+using SuperMarketManagement.ViewModels;
 
 namespace SuperMarketManagement.Views.Admin
 {
@@ -7,6 +8,7 @@ namespace SuperMarketManagement.Views.Admin
         public ChartOverview()
         {
             InitializeComponent();
+            DataContext = new ChartOverviewViewModel();
         }
     }
 }
