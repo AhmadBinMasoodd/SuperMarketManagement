@@ -51,12 +51,12 @@ namespace SuperMarketManagement.Views.Cashier
                 ProfileMenuBtn.Click += ProfileButton_Click;
             }
 
-            LoadView(new POSView(_user), POSMenuBtn);
+            LoadView(new SalesView(_user), POSMenuBtn);
         }
 
         private void POSButton_Click(object sender, RoutedEventArgs e)
         {
-            LoadView(new POSView(_user), POSMenuBtn);
+            LoadView(new SalesView(_user), POSMenuBtn);
         }
 
         private void ReturnRefundButton_Click(object sender, RoutedEventArgs e)

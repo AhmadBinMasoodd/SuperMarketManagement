@@ -1,10 +1,10 @@
 using System;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Input;
 using SuperMarketManagement.Models;
+using SuperMarketManagement.Services;
 using SuperMarketManagement.ViewModels.Base;
 using CategoryModel = SuperMarketManagement.Models.Category;
 using Microsoft.EntityFrameworkCore;
@@ -18,6 +18,7 @@ namespace SuperMarketManagement.ViewModels
         public string CategoryName { get; set; } = string.Empty;
         public decimal Quantity { get; set; }
         public string Unit { get; set; } = string.Empty;
+        public decimal PurchasePrice { get; set; }
         public decimal SalePrice { get; set; }
     }
 
@@ -32,7 +33,7 @@ namespace SuperMarketManagement.ViewModels
         private const string StockInRemark = "Stock In";
         private const string StockOutRemark = "Stock Out";
         private const string StockDamagedRemark = "Stock Damaged";
-        private readonly MarketDbContext _context = new();
+        private readonly ProductService _productService = new();
         private readonly User _currentUser;
 
         private ObservableCollection<ProductGridItem> _products = new();
@@ -72,7 +73,7 @@ namespace SuperMarketManagement.ViewModels
                 {
                     if (_selectedProduct != null)
                     {
-                        var product = _context.Products.Find(_selectedProduct.Id);
+                        var product = _productService.GetProduct(_selectedProduct.Id);
                         if (product != null)
                         {
                             Name = product.Name;
@@ -172,29 +173,7 @@ namespace SuperMarketManagement.ViewModels
 
         private IReadOnlyList<string> GetAllowedTransactionTypes()
         {
-            try
-            {
-                var connection = _context.Database.GetDbConnection();
-                if (connection.State != System.Data.ConnectionState.Open)
-                {
-                    connection.Open();
-                }
-
-                using var command = connection.CreateCommand();
-                command.CommandText = "SELECT definition FROM sys.check_constraints WHERE name = 'CK_StockTransactions_TransactionType'";
-                var definition = command.ExecuteScalar() as string;
-                if (string.IsNullOrWhiteSpace(definition))
-                {
-                    return Array.Empty<string>();
-                }
-
-                var matches = Regex.Matches(definition, "'([^']+)'", RegexOptions.IgnoreCase);
-                return matches.Select(m => m.Groups[1].Value).Distinct(StringComparer.OrdinalIgnoreCase).ToList();
-            }
-            catch
-            {
-                return Array.Empty<string>();
-            }
+            return _productService.GetAllowedTransactionTypes();
         }
 
         private string ResolveTransactionType(bool isIncrease, bool isInitial)
@@ -223,16 +202,7 @@ namespace SuperMarketManagement.ViewModels
         {
             try
             {
-                var categoryList = _context.Categories
-                    .AsNoTracking()
-                    .OrderBy(c => c.Name)
-                    .Select(c => new CategoryOption
-                    {
-                        Id = c.Id,
-                        Display = $"{c.Id} - {c.Name}"
-                    })
-                    .ToList();
-                Categories = new ObservableCollection<CategoryOption>(categoryList);
+                Categories = new ObservableCollection<CategoryOption>(_productService.GetCategoryOptions());
             }
             catch (Exception ex)
             {
@@ -242,28 +212,7 @@ namespace SuperMarketManagement.ViewModels
 
         private void LoadProducts()
         {
-            var query = _context.Products.AsQueryable();
-            if (!string.IsNullOrWhiteSpace(SearchText))
-            {
-                var text = SearchText.Trim().ToLower();
-                query = query.Where(p => p.Name.ToLower().Contains(text));
-            }
-
-            var items = (from p in query
-                         join c in _context.Categories on p.CategoryId equals c.Id into categoryJoin
-                         from c in categoryJoin.DefaultIfEmpty()
-                         orderby p.Name
-                         select new ProductGridItem
-                         {
-                             Id = p.Id,
-                             Name = p.Name,
-                             CategoryName = c != null ? c.Name : "Unknown",
-                             Quantity = p.Quantity,
-                             Unit = p.Unit,
-                             SalePrice = p.SalePrice
-                         }).ToList();
-
-            Products = new ObservableCollection<ProductGridItem>(items);
+            Products = new ObservableCollection<ProductGridItem>(_productService.GetProducts(SearchText));
         }
 
         private (bool IsValid, string Message, decimal Pur, decimal Sal, decimal Qty) Validate()
@@ -294,12 +243,11 @@ namespace SuperMarketManagement.ViewModels
                     Unit = Unit.Trim()
                 };
 
-                _context.Products.Add(product);
-                _context.SaveChanges();
+                _productService.AddProduct(product);
 
                 if (v.Qty > 0)
                 {
-                    _context.StockTransactions.Add(new StockTransaction
+                    _productService.AddStockTransaction(new StockTransaction
                     {
                         ProductId = product.Id,
                         UserId = _currentUser.Id,
@@ -308,7 +256,6 @@ namespace SuperMarketManagement.ViewModels
                         Remarks = StockInRemark,
                         TransactionDateTime = DateTime.Now
                     });
-                    _context.SaveChanges();
                 }
 
                 LoadProducts();
@@ -332,7 +279,7 @@ namespace SuperMarketManagement.ViewModels
 
             try
             {
-                var product = _context.Products.Find(SelectedProduct.Id);
+                var product = _productService.GetProduct(SelectedProduct.Id);
                 if (product == null) return;
 
                 decimal diff = v.Qty - product.Quantity;
@@ -346,7 +293,7 @@ namespace SuperMarketManagement.ViewModels
 
                 if (diff != 0)
                 {
-                    _context.StockTransactions.Add(new StockTransaction
+                    _productService.AddStockTransaction(new StockTransaction
                     {
                         ProductId = product.Id,
                         UserId = _currentUser.Id,
@@ -357,7 +304,7 @@ namespace SuperMarketManagement.ViewModels
                     });
                 }
 
-                _context.SaveChanges();
+                _productService.UpdateProduct(product);
                 LoadProducts();
                 ClearForm();
             }
@@ -376,14 +323,9 @@ namespace SuperMarketManagement.ViewModels
             if (parameter is not int id || MessageBox.Show("Delete product?", "Confirm", MessageBoxButton.YesNo) != MessageBoxResult.Yes) return;
             try
             {
-                var product = _context.Products.Find(id);
-                if (product != null)
-                {
-                    _context.Products.Remove(product);
-                    _context.SaveChanges();
-                    LoadProducts();
-                    ClearForm();
-                }
+                _productService.DeleteProduct(id);
+                LoadProducts();
+                ClearForm();
             }
             catch (DbUpdateException ex)
             {
@@ -407,6 +349,6 @@ namespace SuperMarketManagement.ViewModels
             Unit = string.Empty;
         }
 
-        public void Dispose() => _context.Dispose();
+        public void Dispose() => _productService.Dispose();
     }
 }

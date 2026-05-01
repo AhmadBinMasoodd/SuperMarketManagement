@@ -4,6 +4,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Input;
 using SuperMarketManagement.Models;
+using SuperMarketManagement.Services;
 using SuperMarketManagement.ViewModels.Base;
 using CategoryModel = SuperMarketManagement.Models.Category;
 
@@ -11,7 +12,7 @@ namespace SuperMarketManagement.ViewModels
 {
     public class CategoryViewModel : ViewModelBase, IDisposable
     {
-        private readonly MarketDbContext _context = new();
+        private readonly CategoryService _categoryService = new();
 
         private ObservableCollection<CategoryModel> _categories = new();
         public ObservableCollection<CategoryModel> Categories
@@ -89,13 +90,7 @@ namespace SuperMarketManagement.ViewModels
 
         private void LoadCategories()
         {
-            var query = _context.Categories.AsQueryable();
-            if (!string.IsNullOrWhiteSpace(SearchText))
-            {
-                var text = SearchText.Trim().ToLower();
-                query = query.Where(c => c.Name.ToLower().Contains(text) || (c.Description != null && c.Description.ToLower().Contains(text)));
-            }
-            Categories = new ObservableCollection<CategoryModel>(query.OrderBy(c => c.Name).ToList());
+            Categories = new ObservableCollection<CategoryModel>(_categoryService.GetCategories(SearchText));
         }
 
         private (bool IsValid, string Message) Validate()
@@ -115,20 +110,19 @@ namespace SuperMarketManagement.ViewModels
                 return;
             }
 
-            if (_context.Categories.Any(c => c.Name == Name.Trim()))
+            if (_categoryService.CategoryNameExists(Name.Trim()))
             {
                 MessageBox.Show("Category name already exists.", "Validation", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
 
-            _context.Categories.Add(new CategoryModel
+            _categoryService.AddCategory(new CategoryModel
             {
                 Name = Name.Trim(),
                 Description = string.IsNullOrWhiteSpace(Description) ? null : Description.Trim(),
                 IsActive = IsActive,
                 CreatedAt = DateTime.Now
             });
-            _context.SaveChanges();
             ClearForm();
             LoadCategories();
         }
@@ -148,21 +142,20 @@ namespace SuperMarketManagement.ViewModels
                 return;
             }
 
-            if (_context.Categories.Any(c => c.Name == Name.Trim() && c.Id != SelectedCategory.Id))
+            if (_categoryService.CategoryNameExists(Name.Trim(), SelectedCategory.Id))
             {
                 MessageBox.Show("Category name already exists.", "Validation", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
 
-            var category = _context.Categories.Find(SelectedCategory.Id);
-            if (category == null) return;
+            var category = SelectedCategory;
 
             category.Name = Name.Trim();
             category.Description = string.IsNullOrWhiteSpace(Description) ? null : Description.Trim();
             category.IsActive = IsActive;
             category.UpdatedAt = DateTime.Now;
 
-            _context.SaveChanges();
+            _categoryService.UpdateCategory(category);
             ClearForm();
             LoadCategories();
         }
@@ -172,14 +165,9 @@ namespace SuperMarketManagement.ViewModels
             if (parameter is not int id || MessageBox.Show("Delete this category?", "Confirm Delete", MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes)
                 return;
 
-            var category = _context.Categories.Find(id);
-            if (category != null)
-            {
-                _context.Categories.Remove(category);
-                _context.SaveChanges();
-                ClearForm();
-                LoadCategories();
-            }
+            _categoryService.DeleteCategory(id);
+            ClearForm();
+            LoadCategories();
         }
 
         private void ClearForm()
@@ -190,7 +178,6 @@ namespace SuperMarketManagement.ViewModels
             IsActive = true;
         }
 
-        public void Dispose() => _context.Dispose();
+        public void Dispose() => _categoryService.Dispose();
     }
 }
-

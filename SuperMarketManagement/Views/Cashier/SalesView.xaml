@@ -1,0 +1,202 @@
+<UserControl x:Class="SuperMarketManagement.Views.Cashier.SalesView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:Icons="http://metro.mahapps.com/winfx/xaml/iconpacks"
+             mc:Ignorable="d" 
+             FontFamily="Segoe UI"
+             d:DesignHeight="650" d:DesignWidth="980">
+    <UserControl.Resources>
+        <SolidColorBrush x:Key="PrimaryBrush" Color="#623ED0"/>
+        <SolidColorBrush x:Key="PrimaryLightBrush" Color="#7C5AE5"/>
+        <SolidColorBrush x:Key="SurfaceBrush" Color="#FFFFFF"/>
+        <SolidColorBrush x:Key="TextPrimaryBrush" Color="#1E293B"/>
+        <SolidColorBrush x:Key="TextSecondaryBrush" Color="#64748B"/>
+
+        <Style x:Key="InputStyle" TargetType="Control">
+            <Setter Property="Height" Value="34"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="FontSize" Value="13"/>
+        </Style>
+
+        <Style x:Key="ActionButtonStyle" TargetType="Button">
+            <Setter Property="Height" Value="40"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Background" Value="{StaticResource PrimaryBrush}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource PrimaryLightBrush}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="BtnBorder"
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="9">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="BtnBorder" Property="Background" Value="#7C5AE5"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="BtnBorder" Property="Background" Value="#4C1D95"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </UserControl.Resources>
+    <Grid Margin="8">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="3*"/>
+            <RowDefinition Height="2*"/>
+        </Grid.RowDefinitions>
+
+        <Border Grid.Row="0" Background="{StaticResource SurfaceBrush}" Padding="16" CornerRadius="14" BorderBrush="#E2E8F0" BorderThickness="1" Margin="0,0,0,8">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="16"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <DockPanel Grid.Row="0">
+                    <TextBlock Text="Products" FontSize="20" FontWeight="SemiBold" Foreground="{StaticResource TextPrimaryBrush}" DockPanel.Dock="Left" VerticalAlignment="Center"/>
+                    <TextBlock Text="Select items to add" FontSize="12" Foreground="{StaticResource TextSecondaryBrush}" Margin="8,4,0,0" DockPanel.Dock="Left" VerticalAlignment="Center"/>
+                    <TextBox x:Name="SearchTextBox" Width="200" DockPanel.Dock="Right" HorizontalAlignment="Right" VerticalAlignment="Center"
+                             Padding="10,0" Background="#F8FAFC" BorderBrush="#E2E8F0" BorderThickness="1"
+                             Style="{StaticResource InputStyle}"
+                             Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"/>
+                </DockPanel>
+
+                <DataGrid Grid.Row="2" x:Name="ProductsGrid" AutoGenerateColumns="False" IsReadOnly="True" GridLinesVisibility="Horizontal" RowHeaderWidth="0" BorderThickness="0"
+                          ItemsSource="{Binding Products}" SelectedItem="{Binding SelectedProduct}">
+                    <DataGrid.Resources>
+                        <Style TargetType="DataGridColumnHeader">
+                            <Setter Property="Background" Value="#EEF2FF"/>
+                            <Setter Property="Foreground" Value="#3730A3"/>
+                            <Setter Property="FontSize" Value="14"/>
+                            <Setter Property="FontWeight" Value="SemiBold"/>
+                            <Setter Property="Height" Value="40"/>
+                            <Setter Property="Padding" Value="10,0"/>
+                        </Style>
+                        <Style TargetType="DataGridCell">
+                            <Setter Property="Padding" Value="10,0"/>
+                            <Setter Property="VerticalContentAlignment" Value="Center"/>
+                            <Setter Property="Foreground" Value="#1E293B"/>
+                            <Style.Triggers>
+                                <Trigger Property="IsSelected" Value="True">
+                                    <Setter Property="Background" Value="#EDE9FE"/>
+                                    <Setter Property="BorderBrush" Value="#DDD6FE"/>
+                                    <Setter Property="Foreground" Value="#1E293B"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                        <Style TargetType="DataGridRow">
+                            <Setter Property="Height" Value="42"/>
+                            <Setter Property="BorderThickness" Value="0"/>
+                            <Style.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Background" Value="#EEF2FF"/>
+                                </Trigger>
+                                <Trigger Property="IsSelected" Value="True">
+                                    <Setter Property="Background" Value="#EDE9FE"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </DataGrid.Resources>
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Item Name" Width="*" Binding="{Binding Name}"/>
+                        <DataGridTextColumn Header="Category" Width="100" Binding="{Binding CategoryName}"/>
+                        <DataGridTextColumn Header="Price" Width="80" Binding="{Binding Price}"/>
+                        <DataGridTextColumn Header="Stock" Width="80" Binding="{Binding Stock}"/>
+                        <DataGridTemplateColumn Header="Action" Width="80">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Button Width="32" Height="26" Background="#623ED0" Foreground="White" Command="{Binding DataContext.AddToBillCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}" CommandParameter="{Binding}">
+                                        <Icons:PackIconMaterial Kind="Plus" Width="14" Height="14" Foreground="White"/>
+                                    </Button>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </Grid>
+        </Border>
+
+        <Border Grid.Row="1" Background="{StaticResource SurfaceBrush}" Padding="16" CornerRadius="14" BorderBrush="#E2E8F0" BorderThickness="1">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="16"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="3*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <StackPanel Grid.Row="0" Grid.ColumnSpan="2">
+                    <TextBlock Text="Current Bill" FontSize="20" FontWeight="SemiBold" Foreground="{StaticResource TextPrimaryBrush}"/>
+                    <TextBlock Text="Review items before billing" FontSize="12" Foreground="{StaticResource TextSecondaryBrush}" Margin="0,4,0,0"/>
+                </StackPanel>
+
+                <DataGrid Grid.Row="2" Grid.Column="0" x:Name="ReceiptGrid" AutoGenerateColumns="False" IsReadOnly="True" GridLinesVisibility="Horizontal" RowHeaderWidth="0" BorderThickness="0"
+                          ItemsSource="{Binding BillItems}">
+                    <DataGrid.Resources>
+                        <Style TargetType="DataGridColumnHeader">
+                            <Setter Property="Background" Value="#EEF2FF"/>
+                            <Setter Property="Foreground" Value="#3730A3"/>
+                            <Setter Property="FontSize" Value="14"/>
+                            <Setter Property="FontWeight" Value="SemiBold"/>
+                            <Setter Property="Height" Value="40"/>
+                            <Setter Property="Padding" Value="10,0"/>
+                        </Style>
+                        <Style TargetType="DataGridCell">
+                            <Setter Property="Padding" Value="10,0"/>
+                            <Setter Property="VerticalContentAlignment" Value="Center"/>
+                            <Setter Property="Foreground" Value="#1E293B"/>
+                            <Style.Triggers>
+                                <Trigger Property="IsSelected" Value="True">
+                                    <Setter Property="Background" Value="#EDE9FE"/>
+                                    <Setter Property="BorderBrush" Value="#DDD6FE"/>
+                                    <Setter Property="Foreground" Value="#1E293B"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                        <Style TargetType="DataGridRow">
+                            <Setter Property="Height" Value="42"/>
+                            <Setter Property="BorderThickness" Value="0"/>
+                            <Style.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Background" Value="#EEF2FF"/>
+                                </Trigger>
+                                <Trigger Property="IsSelected" Value="True">
+                                    <Setter Property="Background" Value="#EDE9FE"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </DataGrid.Resources>
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Sr No" Width="50" Binding="{Binding SrNo}"/>
+                        <DataGridTextColumn Header="Item Name" Width="*" Binding="{Binding Name}"/>
+                        <DataGridTextColumn Header="Qty" Width="50" Binding="{Binding Quantity}"/>
+                        <DataGridTextColumn Header="Unit" Width="80" Binding="{Binding UnitPrice}"/>
+                        <DataGridTextColumn Header="Total" Width="90" Binding="{Binding Total}"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+
+                <StackPanel Grid.Row="2" Grid.Column="1" Margin="16,0,0,0" VerticalAlignment="Bottom">
+                    <TextBlock Text="{Binding GrandTotal, StringFormat=Grand Total (PKR): {0:N2}}" FontSize="22" FontWeight="Bold" Foreground="{StaticResource TextPrimaryBrush}" HorizontalAlignment="Right" Margin="0,0,0,16"/>
+                    <Button Content="Generate Bill" Style="{StaticResource ActionButtonStyle}"/>
+                </StackPanel>
+            </Grid>
+        </Border>
+    </Grid>
+</UserControl>

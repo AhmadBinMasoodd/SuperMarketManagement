@@ -19,6 +19,14 @@ public partial class MarketDbContext : DbContext
 
     public virtual DbSet<Product> Products { get; set; }
 
+    public virtual DbSet<Sale> Sales { get; set; }
+
+    public virtual DbSet<SaleItem> SaleItems { get; set; }
+
+    public virtual DbSet<SalePayment> SalePayments { get; set; }
+
+    public virtual DbSet<SaleRefund> SaleRefunds { get; set; }
+
     public virtual DbSet<StockTransaction> StockTransactions { get; set; }
 
     public virtual DbSet<User> Users { get; set; }
@@ -83,6 +91,80 @@ public partial class MarketDbContext : DbContext
                 .HasForeignKey(s => s.UserId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_StockTransactions_Users");
+        });
+
+        modelBuilder.Entity<Sale>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK_Sales");
+
+            entity.Property(e => e.SaleDateTime).HasDefaultValueSql("(getdate())");
+            entity.Property(e => e.TotalAmount).HasColumnType("decimal(18, 2)");
+            entity.Property(e => e.PaymentMethod).HasMaxLength(20);
+            entity.Property(e => e.Remarks).HasMaxLength(100);
+
+            entity.HasOne<User>()
+                .WithMany()
+                .HasForeignKey(e => e.UserId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_Sales_Users");
+        });
+
+        modelBuilder.Entity<SaleItem>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK_SaleItems");
+
+            entity.Property(e => e.Quantity).HasColumnType("decimal(18, 2)");
+            entity.Property(e => e.UnitPrice).HasColumnType("decimal(18, 2)");
+            entity.Property(e => e.LineTotal).HasColumnType("decimal(18, 2)");
+
+            entity.HasOne<Sale>()
+                .WithMany()
+                .HasForeignKey(e => e.SaleId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_SaleItems_Sales");
+
+            entity.HasOne<Product>()
+                .WithMany()
+                .HasForeignKey(e => e.ProductId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_SaleItems_Products");
+        });
+
+        modelBuilder.Entity<SalePayment>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK_SalePayments");
+
+            entity.Property(e => e.Amount).HasColumnType("decimal(18, 2)");
+            entity.Property(e => e.PaymentDateTime).HasDefaultValueSql("(getdate())");
+            entity.Property(e => e.PaymentMethod).HasMaxLength(20);
+
+            entity.HasOne<Sale>()
+                .WithMany()
+                .HasForeignKey(e => e.SaleId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_SalePayments_Sales");
+        });
+
+        modelBuilder.Entity<SaleRefund>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK_SaleRefunds");
+
+            entity.Property(e => e.Quantity).HasColumnType("decimal(18, 2)");
+            entity.Property(e => e.RefundAmount).HasColumnType("decimal(18, 2)");
+            entity.Property(e => e.RefundDateTime).HasDefaultValueSql("(getdate())");
+            entity.Property(e => e.Remarks).HasMaxLength(100);
+
+            entity.HasOne<Sale>()
+                .WithMany()
+                .HasForeignKey(e => e.SaleId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_SaleRefunds_Sales");
+
+            entity.HasOne<Product>()
+                .WithMany()
+                .HasForeignKey(e => e.ProductId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_SaleRefunds_Products");
         });
 
         OnModelCreatingPartial(modelBuilder);

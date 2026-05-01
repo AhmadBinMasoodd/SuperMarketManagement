@@ -24,6 +24,8 @@
         <Style x:Key="InputStyle" TargetType="Control">
             <Setter Property="Height" Value="36"/>
             <Setter Property="FontSize" Value="13"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="Padding" Value="8,0"/>
         </Style>
 
         <Style x:Key="ActionButtonStyle" TargetType="Button">

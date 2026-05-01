@@ -4,13 +4,14 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Input;
 using SuperMarketManagement.Models;
+using SuperMarketManagement.Services;
 using SuperMarketManagement.ViewModels.Base;
 
 namespace SuperMarketManagement.ViewModels
 {
     public class EmployeeViewModel : ViewModelBase, IDisposable
     {
-        private readonly MarketDbContext _context = new();
+        private readonly EmployeeService _employeeService = new();
 
         private ObservableCollection<User> _employees = new();
         public ObservableCollection<User> Employees
@@ -79,11 +80,7 @@ namespace SuperMarketManagement.ViewModels
 
         private void LoadEmployees()
         {
-            var users = _context.Users
-                .Where(u => u.Role == "Cashier" || u.Role == "Manager")
-                .OrderBy(u => u.Id)
-                .ToList();
-            Employees = new ObservableCollection<User>(users);
+            Employees = new ObservableCollection<User>(_employeeService.GetEmployees());
         }
 
         private void ExecuteAdd()
@@ -102,8 +99,7 @@ namespace SuperMarketManagement.ViewModels
                 Salary = string.IsNullOrWhiteSpace(Salary) ? null : decimal.Parse(Salary)
             };
 
-            _context.Users.Add(user);
-            _context.SaveChanges();
+            _employeeService.AddEmployee(user);
             LoadEmployees();
             ClearForm();
         }
@@ -112,7 +108,7 @@ namespace SuperMarketManagement.ViewModels
         {
             if (SelectedEmployee == null || !Validate()) return;
 
-            var user = _context.Users.Find(SelectedEmployee.Id);
+            var user = _employeeService.GetById(SelectedEmployee.Id);
             if (user != null)
             {
                 user.Name = Name;
@@ -124,7 +120,7 @@ namespace SuperMarketManagement.ViewModels
                 user.Password = Password;
                 user.Salary = string.IsNullOrWhiteSpace(Salary) ? null : decimal.Parse(Salary);
 
-                _context.SaveChanges();
+                _employeeService.UpdateEmployee(user);
                 LoadEmployees();
                 ClearForm();
             }
@@ -137,14 +133,9 @@ namespace SuperMarketManagement.ViewModels
             var result = MessageBox.Show("Are you sure you want to delete this employee?", "Confirm", MessageBoxButton.YesNo);
             if (result == MessageBoxResult.Yes)
             {
-                var user = _context.Users.Find(SelectedEmployee.Id);
-                if (user != null)
-                {
-                    _context.Users.Remove(user);
-                    _context.SaveChanges();
-                    LoadEmployees();
-                    ClearForm();
-                }
+                _employeeService.DeleteEmployee(SelectedEmployee.Id);
+                LoadEmployees();
+                ClearForm();
             }
         }
 
@@ -165,6 +156,6 @@ namespace SuperMarketManagement.ViewModels
             SelectedEmployee = null;
         }
 
-        public void Dispose() => _context.Dispose();
+        public void Dispose() => _employeeService.Dispose();
     }
 }

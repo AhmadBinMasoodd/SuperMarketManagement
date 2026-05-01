@@ -4,12 +4,13 @@ using SuperMarketManagement.Views.Manager;
 using System.Windows;
 using System.Windows.Input;
 using SuperMarketManagement.Models;
+using SuperMarketManagement.Services;
 
 namespace SuperMarketManagement.ViewModels
 {
     public class LoginViewModel : ViewModelBase
     {
-        private readonly MarketDbContext _context = new();
+        private readonly AuthService _authService = new();
 
         private string _email = string.Empty;
         public string Email
@@ -49,7 +50,7 @@ namespace SuperMarketManagement.ViewModels
                 return;
             }
 
-            var user = _context.Users.FirstOrDefault(u => u.Username == Email && u.Password == password);
+            var user = _authService.Authenticate(Email, password);
             if (user is null)
             {
                 ErrorMessage = "Invalid credentials.";

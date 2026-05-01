@@ -271,7 +271,7 @@
                         <DataGridTextColumn Header="Id" Binding="{Binding Id}" Width="60"/>
                         <DataGridTextColumn Header="Name" Binding="{Binding Name}" Width="*"/>
                         <DataGridTextColumn Header="Category" Binding="{Binding CategoryName}" Width="120"/>
-                        <DataGridTextColumn Header="Purchase" Binding="{Binding PurchasePrice}" Width="90"/>
+                        <DataGridTextColumn Header="Purchase (PKR)" Binding="{Binding PurchasePrice}" Width="110"/>
                         <DataGridTextColumn Header="Sale" Binding="{Binding SalePrice}" Width="90"/>
                         <DataGridTextColumn Header="Quantity" Binding="{Binding Quantity}" Width="90"/>
                         <DataGridTextColumn Header="Unit" Binding="{Binding Unit}" Width="90"/>
