@@ -4,6 +4,7 @@ using System.Windows.Input;
 using SuperMarketManagement.Models;
 using SuperMarketManagement.ViewModels.Base;
 using SuperMarketManagement.Views.Admin;
+using SuperMarketManagement.Views.Manager;
 
 namespace SuperMarketManagement.ViewModels
 {
@@ -49,7 +50,7 @@ namespace SuperMarketManagement.ViewModels
 
         private void ExecuteNavigateDashboard()
         {
-            CurrentView = new ChartOverview();
+            CurrentView = new ManagerChartOverview();
             ActiveMenu = "Dashboard";
         }
 
