@@ -4,13 +4,14 @@ using SuperMarketManagement.ViewModels.Base;
 
 namespace SuperMarketManagement.ViewModels
 {
-    public class RefundViewModel : ViewModelBase, IDisposable
+    public class EditableReceiptViewModel : ViewModelBase, IDisposable
     {
         private int _saleId;
         private DateTime _saleDateTime;
         private string _cashierName = string.Empty;
-        private decimal _totalAmount;
-        private ObservableCollection<RefundLineItemViewModel> _items = new();
+        private decimal _originalTotalAmount;
+        private decimal _currentTotalAmount;
+        private ObservableCollection<EditableReceiptLineItemViewModel> _items = new();
 
         public int SaleId
         {
@@ -30,13 +31,19 @@ namespace SuperMarketManagement.ViewModels
             set => SetProperty(ref _cashierName, value);
         }
 
-        public decimal TotalAmount
+        public decimal OriginalTotalAmount
         {
-            get => _totalAmount;
-            set => SetProperty(ref _totalAmount, value);
+            get => _originalTotalAmount;
+            set => SetProperty(ref _originalTotalAmount, value);
         }
 
-        public ObservableCollection<RefundLineItemViewModel> Items
+        public decimal CurrentTotalAmount
+        {
+            get => _currentTotalAmount;
+            set => SetProperty(ref _currentTotalAmount, value);
+        }
+
+        public ObservableCollection<EditableReceiptLineItemViewModel> Items
         {
             get => _items;
             set => SetProperty(ref _items, value);
@@ -47,18 +54,25 @@ namespace SuperMarketManagement.ViewModels
         }
     }
 
-    public class RefundLineItemViewModel : ViewModelBase
+    public class EditableReceiptLineItemViewModel : ViewModelBase
     {
         private int _srNo;
+        private int _productId;
         private string _productName = string.Empty;
-        private decimal _quantity;
+        private decimal _originalQuantity;
+        private decimal _currentQuantity;
         private decimal _unitPrice;
-        private decimal _lineTotal;
 
         public int SrNo
         {
             get => _srNo;
             set => SetProperty(ref _srNo, value);
+        }
+
+        public int ProductId
+        {
+            get => _productId;
+            set => SetProperty(ref _productId, value);
         }
 
         public string ProductName
@@ -67,22 +81,38 @@ namespace SuperMarketManagement.ViewModels
             set => SetProperty(ref _productName, value);
         }
 
-        public decimal Quantity
+        public decimal OriginalQuantity
         {
-            get => _quantity;
-            set => SetProperty(ref _quantity, value);
+            get => _originalQuantity;
+            set => SetProperty(ref _originalQuantity, value);
+        }
+
+        public decimal CurrentQuantity
+        {
+            get => _currentQuantity;
+            set
+            {
+                if (SetProperty(ref _currentQuantity, value))
+                {
+                    OnPropertyChanged(nameof(LineTotal));
+                    OnPropertyChanged(nameof(HasChanged));
+                }
+            }
         }
 
         public decimal UnitPrice
         {
             get => _unitPrice;
-            set => SetProperty(ref _unitPrice, value);
+            set
+            {
+                if (SetProperty(ref _unitPrice, value))
+                {
+                    OnPropertyChanged(nameof(LineTotal));
+                }
+            }
         }
 
-        public decimal LineTotal
-        {
-            get => _lineTotal;
-            set => SetProperty(ref _lineTotal, value);
-        }
+        public decimal LineTotal => CurrentQuantity * UnitPrice;
+        public bool HasChanged => CurrentQuantity != OriginalQuantity;
     }
 }

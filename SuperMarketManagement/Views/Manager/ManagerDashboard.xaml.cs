@@ -9,7 +9,7 @@ namespace SuperMarketManagement.Views.Manager
         public ManagerDashboard(User user)
         {
             InitializeComponent();
-            DataContext = new AdminDashboardViewModel(user);
+            DataContext = new ManagerDashboardViewModel(user);
         }
 
         private void CloseBtn_Click(object sender, RoutedEventArgs e)
