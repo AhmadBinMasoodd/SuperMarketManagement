@@ -63,7 +63,7 @@
             <Setter Property="FontSize" Value="14"/>
             <Setter Property="FontWeight" Value="SemiBold"/>
             <Setter Property="Background" Value="Transparent"/>
-                <Setter Property="BorderBrush" Value="{StaticResource BrushAccent}"/>
+                <Setter Property="BorderBrush" Value="{StaticResource BrushSecondary}"/>
             <Setter Property="BorderThickness" Value="1"/>
             <Setter Property="HorizontalContentAlignment" Value="Left"/>
                 <Setter Property="Foreground" Value="{StaticResource BrushPrimaryText}"/>
@@ -82,13 +82,13 @@
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="MenuBorder" Property="Background" Value="{StaticResource BrushAccent}"/>
+                                <Setter TargetName="MenuBorder" Property="Background" Value="{StaticResource BrushSecondary}"/>
                                 <Setter TargetName="MenuBorder" Property="BorderBrush" Value="{StaticResource BrushAccent}"/>
                                 <Setter Property="Foreground" Value="{StaticResource BrushPrimaryText}"/>
                             </Trigger>
                             <Trigger Property="IsPressed" Value="True">
-                                <Setter TargetName="MenuBorder" Property="Background" Value="{StaticResource BrushButtonHover}"/>
-                                <Setter TargetName="MenuBorder" Property="BorderBrush" Value="{StaticResource BrushButtonHover}"/>
+                                <Setter TargetName="MenuBorder" Property="Background" Value="{StaticResource BrushSecondary}"/>
+                                <Setter TargetName="MenuBorder" Property="BorderBrush" Value="{StaticResource BrushAccent}"/>
                                 <Setter Property="Foreground" Value="{StaticResource BrushPrimaryText}"/>
                             </Trigger>
                         </ControlTemplate.Triggers>
@@ -98,9 +98,27 @@
         </Style>
 
         <Style x:Key="SideMenuButtonActiveStyle" TargetType="Button" BasedOn="{StaticResource SideMenuButtonStyle}">
-            <Setter Property="Background" Value="{StaticResource BrushAccent}"/>
+            <Setter Property="Background" Value="{StaticResource BrushSecondary}"/>
             <Setter Property="BorderBrush" Value="{StaticResource BrushAccent}"/>
             <Setter Property="Foreground" Value="{StaticResource BrushPrimaryText}"/>
+        </Style>
+
+        <Style x:Key="LogoutButtonStyle" TargetType="Button" BasedOn="{StaticResource SideMenuButtonStyle}">
+            <Setter Property="Background" Value="{StaticResource BrushSecondary}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource BrushAccent}"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="{StaticResource BrushButtonHover}"/>
+                    <Setter Property="BorderBrush" Value="{StaticResource BrushAccent}"/>
+                    <Setter Property="Foreground" Value="White"/>
+                </Trigger>
+                <Trigger Property="IsPressed" Value="True">
+                    <Setter Property="Background" Value="{StaticResource BrushButtonHover}"/>
+                    <Setter Property="BorderBrush" Value="{StaticResource BrushAccent}"/>
+                    <Setter Property="Foreground" Value="White"/>
+                </Trigger>
+            </Style.Triggers>
         </Style>
     </Window.Resources>
 
@@ -180,11 +198,10 @@
                             Command="{Binding LogoutCommand}"
                             Height="44"
                             Margin="0,12,0,0"
-                            Background="{StaticResource BrushAccent}"
-                            BorderBrush="{StaticResource BrushAccent}"
                             BorderThickness="1"
                             HorizontalContentAlignment="Left"
-                            Padding="12,0">
+                            Padding="12,0"
+                            Style="{StaticResource LogoutButtonStyle}">
                         <DockPanel>
                             <Icons:PackIconMaterial Kind="Logout" Width="18" Height="18" Foreground="{StaticResource BrushPrimaryText}" Margin="0,0,10,0"/>
                             <TextBlock Text="Logout" Foreground="{StaticResource BrushPrimaryText}" VerticalAlignment="Center" FontWeight="SemiBold"/>
@@ -205,8 +222,8 @@
                                     <Style TargetType="Button" BasedOn="{StaticResource SideMenuButtonStyle}">
                                         <Style.Triggers>
                                             <DataTrigger Binding="{Binding ActiveMenu}" Value="POS">
-                                                <Setter Property="Background" Value="{StaticResource BrushAccent}"/>
-                                                <Setter Property="BorderBrush" Value="{StaticResource BrushAccent}"/>
+                                                <Setter Property="Background" Value="{StaticResource BrushSecondary}"/>
+                                                <Setter Property="BorderBrush" Value="Transparent"/>
                                                 <Setter Property="Foreground" Value="{StaticResource BrushPrimaryText}"/>
                                             </DataTrigger>
                                         </Style.Triggers>
@@ -223,8 +240,8 @@
                                     <Style TargetType="Button" BasedOn="{StaticResource SideMenuButtonStyle}">
                                         <Style.Triggers>
                                             <DataTrigger Binding="{Binding ActiveMenu}" Value="ReturnRefund">
-                                                <Setter Property="Background" Value="{StaticResource BrushAccent}"/>
-                                                <Setter Property="BorderBrush" Value="{StaticResource BrushAccent}"/>
+                                                <Setter Property="Background" Value="{StaticResource BrushSecondary}"/>
+                                                <Setter Property="BorderBrush" Value="Transparent"/>
                                                 <Setter Property="Foreground" Value="{StaticResource BrushPrimaryText}"/>
                                             </DataTrigger>
                                         </Style.Triggers>
@@ -241,8 +258,8 @@
                                     <Style TargetType="Button" BasedOn="{StaticResource SideMenuButtonStyle}">
                                         <Style.Triggers>
                                             <DataTrigger Binding="{Binding ActiveMenu}" Value="DailySummary">
-                                                <Setter Property="Background" Value="{StaticResource BrushAccent}"/>
-                                                <Setter Property="BorderBrush" Value="{StaticResource BrushAccent}"/>
+                                                <Setter Property="Background" Value="{StaticResource BrushSecondary}"/>
+                                                <Setter Property="BorderBrush" Value="Transparent"/>
                                                 <Setter Property="Foreground" Value="{StaticResource BrushPrimaryText}"/>
                                             </DataTrigger>
                                         </Style.Triggers>
@@ -259,8 +276,8 @@
                                     <Style TargetType="Button" BasedOn="{StaticResource SideMenuButtonStyle}">
                                         <Style.Triggers>
                                             <DataTrigger Binding="{Binding ActiveMenu}" Value="Profile">
-                                                <Setter Property="Background" Value="{StaticResource BrushAccent}"/>
-                                                <Setter Property="BorderBrush" Value="{StaticResource BrushAccent}"/>
+                                                <Setter Property="Background" Value="{StaticResource BrushSecondary}"/>
+                                                <Setter Property="BorderBrush" Value="Transparent"/>
                                                 <Setter Property="Foreground" Value="{StaticResource BrushPrimaryText}"/>
                                             </DataTrigger>
                                         </Style.Triggers>
