@@ -41,6 +41,16 @@ namespace SuperMarketManagement.Services
 
         public User? GetById(int id) => _context.Users.Find(id);
 
+        public bool UsernameExists(string username, int? excludeUserId = null)
+        {
+            var query = _context.Users.Where(u => u.Username == username);
+            if (excludeUserId.HasValue)
+            {
+                query = query.Where(u => u.Id != excludeUserId.Value);
+            }
+            return query.Any();
+        }
+
         public void Dispose() => _context.Dispose();
     }
 }

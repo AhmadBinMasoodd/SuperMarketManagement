@@ -59,13 +59,13 @@ namespace SuperMarketManagement.ViewModels
 
             ErrorMessage = string.Empty;
 
-            var currentWindow = Application.Current.MainWindow;
+                var currentWindow = Application.Current.MainWindow;
 
             if (string.Equals(user.Role, "Admin", StringComparison.OrdinalIgnoreCase))
             {
                 var dashboard = new AdminDashboard(user);
                 dashboard.Show();
-                currentWindow?.Close();
+                    currentWindow?.Close();
                 return;
             }
 
@@ -73,7 +73,7 @@ namespace SuperMarketManagement.ViewModels
             {
                 var dashboard = new ManagerDashboard(user);
                 dashboard.Show();
-                currentWindow?.Close();
+                    currentWindow?.Close();
                 return;
             }
 
@@ -81,7 +81,7 @@ namespace SuperMarketManagement.ViewModels
             {
                 var dashboard = new SuperMarketManagement.Views.Cashier.CashierDashboard(user);
                 dashboard.Show();
-                currentWindow?.Close();
+                    currentWindow?.Close();
                 return;
             }
 

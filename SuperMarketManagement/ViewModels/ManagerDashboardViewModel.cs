@@ -74,12 +74,14 @@ namespace SuperMarketManagement.ViewModels
 
         private void ExecuteLogout()
         {
+            // Create and show the login window first
             var loginWindow = new MainWindow();
             loginWindow.Show();
 
+            // Then close the manager dashboard
             foreach (Window window in Application.Current.Windows)
             {
-                if (ReferenceEquals(window.DataContext, this))
+                if (window is Views.Manager.ManagerDashboard)
                 {
                     window.Close();
                     break;

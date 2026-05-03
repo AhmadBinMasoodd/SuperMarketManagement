@@ -79,17 +79,23 @@ namespace SuperMarketManagement.ViewModels
 
         private void ExecuteLogout()
         {
-            var loginWindow = new MainWindow();
-            loginWindow.Show();
-
+            // Close the admin dashboard first
+            Window? adminWindow = null;
             foreach (Window window in Application.Current.Windows)
             {
                 if (window is Views.Admin.AdminDashboard)
                 {
-                    window.Close();
+                    adminWindow = window;
                     break;
                 }
             }
+
+            // Create and show the login window
+            var loginWindow = new MainWindow();
+            loginWindow.Show();
+
+            // Now close the admin dashboard
+            adminWindow?.Close();
         }
     }
 }

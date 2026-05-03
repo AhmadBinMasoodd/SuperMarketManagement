@@ -86,6 +86,7 @@ namespace SuperMarketManagement.ViewModels
         private void ExecuteAdd()
         {
             if (!Validate()) return;
+            if (!ValidateUsernameUniqueness()) return;
 
             var user = new User
             {
@@ -107,6 +108,7 @@ namespace SuperMarketManagement.ViewModels
         private void ExecuteUpdate()
         {
             if (SelectedEmployee == null || !Validate()) return;
+            if (!ValidateUsernameUniqueness(SelectedEmployee.Id)) return;
 
             var user = _employeeService.GetById(SelectedEmployee.Id);
             if (user != null)
@@ -145,6 +147,16 @@ namespace SuperMarketManagement.ViewModels
                 string.IsNullOrWhiteSpace(Username) || string.IsNullOrWhiteSpace(Password))
             {
                 MessageBox.Show("Please fill required fields.");
+                return false;
+            }
+            return true;
+        }
+
+        private bool ValidateUsernameUniqueness(int? excludeUserId = null)
+        {
+            if (_employeeService.UsernameExists(Username, excludeUserId))
+            {
+                MessageBox.Show("User with this username already exists try another one", "Username Duplicate", MessageBoxButton.OK);
                 return false;
             }
             return true;
