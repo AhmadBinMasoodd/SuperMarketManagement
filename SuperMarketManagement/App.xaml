@@ -7,7 +7,12 @@
               StartupUri="MainWindow.xaml">
     <Application.Resources>
 
-        <Style x:Key="topButton" TargetType="Button">
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Resources/DarkNavyTheme.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+
+            <Style x:Key="topButton" TargetType="Button">
             <Setter Property="Background" Value="Transparent"/>
             <Setter Property="Foreground" Value="#6e7783"/>
             <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
@@ -30,5 +35,6 @@
                 </Trigger>
             </Style.Triggers>
         </Style>
+        </ResourceDictionary>
     </Application.Resources>
 </Application>

@@ -12,9 +12,9 @@
         <DropShadowEffect x:Key="SoftShadow" BlurRadius="10" ShadowDepth="2" Opacity="0.10" Color="#0F172A"/>
 
         <Style x:Key="CardBorderStyle" TargetType="Border">
-            <Setter Property="Background" Value="White"/>
+            <Setter Property="Background" Value="{StaticResource BrushSecondary}"/>
             <Setter Property="CornerRadius" Value="16"/>
-            <Setter Property="BorderBrush" Value="#E2E8F0"/>
+            <Setter Property="BorderBrush" Value="{StaticResource BrushAccent}"/>
             <Setter Property="BorderThickness" Value="1"/>
             <Setter Property="Effect" Value="{StaticResource SoftShadow}"/>
             <Setter Property="Padding" Value="12"/>
@@ -23,18 +23,18 @@
         <Style x:Key="SectionTitleStyle" TargetType="TextBlock">
             <Setter Property="FontSize" Value="13"/>
             <Setter Property="FontWeight" Value="SemiBold"/>
-            <Setter Property="Foreground" Value="#0F172A"/>
+            <Setter Property="Foreground" Value="{StaticResource BrushPrimaryText}"/>
         </Style>
 
         <Style x:Key="SectionSubtitleStyle" TargetType="TextBlock">
             <Setter Property="FontSize" Value="11"/>
-            <Setter Property="Foreground" Value="#64748B"/>
+            <Setter Property="Foreground" Value="{StaticResource BrushSecondaryText}"/>
         </Style>
 
         <DataTemplate x:Key="MetricCardTemplate">
             <Border CornerRadius="14"
-                    Background="White"
-                    BorderBrush="#E2E8F0"
+                    Background="{StaticResource BrushSecondary}"
+                    BorderBrush="{StaticResource BrushAccent}"
                     BorderThickness="1"
                     Padding="12"
                     Effect="{StaticResource SoftShadow}">
@@ -55,7 +55,7 @@
                             Background="{Binding Accent}"
                             HorizontalAlignment="Left">
                         <TextBlock Text="■"
-                                   Foreground="White"
+                                   Foreground="{StaticResource BrushPrimaryText}"
                                    FontSize="12"
                                    FontWeight="Bold"
                                    HorizontalAlignment="Center"
@@ -66,18 +66,18 @@
                                Text="{Binding Value}"
                                FontSize="20"
                                FontWeight="Bold"
-                               Foreground="#0F172A"/>
+                               Foreground="{StaticResource BrushPrimaryText}"/>
 
                     <TextBlock Grid.Row="4"
                                Text="{Binding Title}"
                                FontSize="11"
                                FontWeight="SemiBold"
-                               Foreground="#334155"/>
+                               Foreground="{StaticResource BrushSecondaryText}"/>
 
                     <TextBlock Grid.Row="6"
                                Text="{Binding Description}"
                                FontSize="10"
-                               Foreground="#64748B"
+                               Foreground="{StaticResource BrushSecondaryText}"
                                TextWrapping="Wrap"/>
                 </Grid>
             </Border>
@@ -86,8 +86,8 @@
         <DataTemplate x:Key="StockMovementTemplate">
             <Border Padding="10"
                     CornerRadius="10"
-                    Background="#F8FAFC"
-                    BorderBrush="#E2E8F0"
+                    Background="{StaticResource BrushSecondary}"
+                    BorderBrush="{StaticResource BrushAccent}"
                     BorderThickness="1"
                     Margin="0,0,0,6">
                 <Grid>
@@ -100,14 +100,14 @@
                         <TextBlock Text="{Binding ProductName}"
                                    FontWeight="SemiBold"
                                    FontSize="12"
-                                   Foreground="#0F172A"/>
+                                   Foreground="{StaticResource BrushPrimaryText}"/>
                         <TextBlock Text="{Binding UserName}"
                                    FontSize="11"
-                                   Foreground="#64748B"
+                                   Foreground="{StaticResource BrushSecondaryText}"
                                    Margin="0,2,0,0"/>
                         <TextBlock Text="{Binding Remarks}"
                                    FontSize="10"
-                                   Foreground="#94A3B8"
+                                   Foreground="{StaticResource BrushSecondaryText}"
                                    TextWrapping="Wrap"
                                    Margin="0,2,0,0"/>
                     </StackPanel>
@@ -116,16 +116,16 @@
                         <TextBlock Text="{Binding QuantityChanged, StringFormat={}{0:N0}}"
                                    FontWeight="Bold"
                                    FontSize="12"
-                                   Foreground="#16A34A"
+                                   Foreground="{StaticResource BrushSelectedRow}"
                                    HorizontalAlignment="Right"/>
                         <TextBlock Text="{Binding TransactionType}"
                                    FontSize="10"
-                                   Foreground="#64748B"
+                                   Foreground="{StaticResource BrushSecondaryText}"
                                    HorizontalAlignment="Right"
                                    Margin="0,2,0,0"/>
                         <TextBlock Text="{Binding TransactionDateTime, StringFormat={}{0:dd MMM yyyy, hh:mm tt}}"
                                    FontSize="10"
-                                   Foreground="#64748B"
+                                   Foreground="{StaticResource BrushSecondaryText}"
                                    HorizontalAlignment="Right"
                                    Margin="0,2,0,0"/>
                     </StackPanel>
@@ -134,7 +134,7 @@
         </DataTemplate>
     </UserControl.Resources>
 
-    <Grid Background="#F5F7FB">
+    <Grid Background="{StaticResource BrushPrimaryDark}">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="10"/>
@@ -160,47 +160,47 @@
 
                 <StackPanel>
                     <TextBlock Text="{Binding WelcomeMessage}"
-                               Foreground="#C7D2FE"
+                               Foreground="{StaticResource BrushSecondaryText}"
                                FontSize="11"
                                FontWeight="SemiBold"/>
                     <TextBlock Text="Inventory dashboard"
-                               Foreground="White"
+                               Foreground="{StaticResource BrushPrimaryText}"
                                FontSize="22"
                                FontWeight="Bold"
                                Margin="0,4,0,4"/>
                     <TextBlock Text="{Binding Subtitle}"
-                               Foreground="#CBD5E1"
+                               Foreground="{StaticResource BrushSecondaryText}"
                                FontSize="11"
                                MaxWidth="500"
                                TextWrapping="Wrap"/>
 
                     <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
-                        <Border Padding="10,5" CornerRadius="999" Background="#1E293B" BorderBrush="#334155" BorderThickness="1" Margin="0,0,8,0">
-                            <TextBlock Foreground="White" FontSize="11" FontWeight="SemiBold" Text="Stock movement"/>
+                        <Border Padding="10,5" CornerRadius="999" Background="{StaticResource BrushSecondary}" BorderBrush="{StaticResource BrushAccent}" BorderThickness="1" Margin="0,0,8,0">
+                            <TextBlock Foreground="{StaticResource BrushPrimaryText}" FontSize="11" FontWeight="SemiBold" Text="Stock movement"/>
                         </Border>
-                        <Border Padding="10,5" CornerRadius="999" Background="#1E293B" BorderBrush="#334155" BorderThickness="1" Margin="0,0,8,0">
-                            <TextBlock Foreground="White" FontSize="11" FontWeight="SemiBold" Text="Low stock watch"/>
+                        <Border Padding="10,5" CornerRadius="999" Background="{StaticResource BrushSecondary}" BorderBrush="{StaticResource BrushAccent}" BorderThickness="1" Margin="0,0,8,0">
+                            <TextBlock Foreground="{StaticResource BrushPrimaryText}" FontSize="11" FontWeight="SemiBold" Text="Low stock watch"/>
                         </Border>
-                        <Border Padding="10,5" CornerRadius="999" Background="#1E293B" BorderBrush="#334155" BorderThickness="1">
-                            <TextBlock Foreground="White" FontSize="11" FontWeight="SemiBold" Text="Catalog health"/>
+                        <Border Padding="10,5" CornerRadius="999" Background="{StaticResource BrushSecondary}" BorderBrush="{StaticResource BrushAccent}" BorderThickness="1">
+                            <TextBlock Foreground="{StaticResource BrushPrimaryText}" FontSize="11" FontWeight="SemiBold" Text="Catalog health"/>
                         </Border>
                     </StackPanel>
                 </StackPanel>
 
-                <Border Grid.Column="1"
+                    <Border Grid.Column="1"
                         CornerRadius="16"
-                        Background="#111827"
+                        Background="{StaticResource BrushSecondary}"
                         Padding="14"
-                        BorderBrush="#334155"
+                        BorderBrush="{StaticResource BrushAccent}"
                         BorderThickness="1">
                     <StackPanel>
-                        <TextBlock Text="Inventory snapshot" Foreground="#94A3B8" FontSize="11" FontWeight="SemiBold"/>
+                        <TextBlock Text="Inventory snapshot" Foreground="{StaticResource BrushSecondaryText}" FontSize="11" FontWeight="SemiBold"/>
                         <TextBlock Text="{Binding HeroStat}"
-                                   Foreground="White"
+                                   Foreground="{StaticResource BrushPrimaryText}"
                                    FontSize="24"
                                    FontWeight="Bold"
                                    Margin="0,4,0,2"/>
-                        <TextBlock Text="Items needing attention right now." Foreground="#CBD5E1" FontSize="11" TextWrapping="Wrap"/>
+                        <TextBlock Text="Items needing attention right now." Foreground="{StaticResource BrushSecondaryText}" FontSize="11" TextWrapping="Wrap"/>
                     </StackPanel>
                 </Border>
             </Grid>
@@ -244,11 +244,11 @@
                                    Margin="0,2,0,0"/>
                     </StackPanel>
 
-                    <Border Grid.Row="2"
-                            Background="#F8FAFC"
+                        <Border Grid.Row="2"
+                            Background="{StaticResource BrushSecondary}"
                             CornerRadius="12"
                             Padding="10"
-                            BorderBrush="#E2E8F0"
+                            BorderBrush="{StaticResource BrushAccent}"
                             BorderThickness="1">
                         <ListView ItemsSource="{Binding RecentStockMovements}"
                                   BorderThickness="0"
@@ -284,11 +284,11 @@
                                    Margin="0,2,0,0"/>
                     </StackPanel>
 
-                    <Border Grid.Row="2"
-                            Background="#F8FAFC"
+                        <Border Grid.Row="2"
+                            Background="{StaticResource BrushSecondary}"
                             CornerRadius="12"
                             Padding="10"
-                            BorderBrush="#E2E8F0"
+                            BorderBrush="{StaticResource BrushAccent}"
                             BorderThickness="1">
                         <ListView ItemsSource="{Binding LowStockItems}"
                                   BorderThickness="0"
@@ -296,10 +296,10 @@
                                   ScrollViewer.VerticalScrollBarVisibility="Auto">
                             <ListView.ItemTemplate>
                                 <DataTemplate>
-                                    <Border Padding="10"
+                                        <Border Padding="10"
                                             CornerRadius="10"
-                                            Background="#FFFFFF"
-                                            BorderBrush="#E2E8F0"
+                                            Background="{StaticResource BrushSecondary}"
+                                            BorderBrush="{StaticResource BrushAccent}"
                                             BorderThickness="1"
                                             Margin="0,0,0,6">
                                         <Grid>
@@ -308,12 +308,12 @@
                                                 <ColumnDefinition Width="Auto"/>
                                             </Grid.ColumnDefinitions>
                                             <StackPanel>
-                                                <TextBlock Text="{Binding ProductName}" FontWeight="SemiBold" FontSize="12" Foreground="#0F172A"/>
-                                                <TextBlock Text="{Binding Quantity, StringFormat={}{0:N0} units left}" FontSize="10" Foreground="#64748B" Margin="0,2,0,0"/>
+                                                <TextBlock Text="{Binding ProductName}" FontWeight="SemiBold" FontSize="12" Foreground="{StaticResource BrushPrimaryText}"/>
+                                                <TextBlock Text="{Binding Quantity, StringFormat={}{0:N0} units left}" FontSize="10" Foreground="{StaticResource BrushSecondaryText}" Margin="0,2,0,0"/>
                                             </StackPanel>
                                             <StackPanel Grid.Column="1" HorizontalAlignment="Right">
-                                                <TextBlock Text="{Binding SalePrice, StringFormat=PKR {0:N2}}" FontWeight="Bold" FontSize="12" Foreground="#16A34A" HorizontalAlignment="Right"/>
-                                                <TextBlock Text="{Binding PurchasePrice, StringFormat=Cost {0:N2}}" FontSize="10" Foreground="#64748B" HorizontalAlignment="Right" Margin="0,2,0,0"/>
+                                                <TextBlock Text="{Binding SalePrice, StringFormat=PKR {0:N2}}" FontWeight="Bold" FontSize="12" Foreground="{StaticResource BrushSelectedRow}" HorizontalAlignment="Right"/>
+                                                <TextBlock Text="{Binding PurchasePrice, StringFormat=Cost {0:N2}}" FontSize="10" Foreground="{StaticResource BrushSecondaryText}" HorizontalAlignment="Right" Margin="0,2,0,0"/>
                                             </StackPanel>
                                         </Grid>
                                     </Border>

@@ -9,11 +9,23 @@
             <Setter Property="Padding" Value="16,0"/>
             <Setter Property="FontSize" Value="13"/>
             <Setter Property="FontWeight" Value="SemiBold"/>
-            <Setter Property="Background" Value="#623ED0"/>
-            <Setter Property="Foreground" Value="White"/>
-            <Setter Property="BorderBrush" Value="#7C5AE5"/>
+            <Setter Property="Background" Value="{StaticResource BrushAccent}"/>
+            <Setter Property="Foreground" Value="{StaticResource BrushPrimaryText}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource BrushAccent}"/>
             <Setter Property="BorderThickness" Value="1"/>
             <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="9">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
         </Style>
     </UserControl.Resources>
 
@@ -23,7 +35,13 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <Border Grid.Row="0" Background="White" Padding="16" CornerRadius="12" BorderBrush="#E2E8F0" BorderThickness="1" Margin="0,0,0,10">
+        <Border Grid.Row="0"
+                Background="{StaticResource BrushSecondary}"
+                Padding="16"
+                CornerRadius="12"
+                BorderBrush="{StaticResource BrushAccent}"
+                BorderThickness="1"
+                Margin="0,0,0,10">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
@@ -31,19 +49,37 @@
                 </Grid.ColumnDefinitions>
 
                 <StackPanel>
-                    <TextBlock Text="Return &amp; Refund" FontSize="24" FontWeight="SemiBold" Foreground="#1E293B"/>
-                    <TextBlock Text="Search receipt, adjust quantity with +/- and print updated bill." Foreground="#64748B" Margin="0,4,0,0"/>
+                    <TextBlock Text="Return &amp; Refund"
+                               FontSize="24"
+                               FontWeight="SemiBold"
+                               Foreground="{StaticResource BrushPrimaryText}"/>
+                    <TextBlock Text="Search receipt, adjust quantity with +/- and print updated bill."
+                               Foreground="{StaticResource BrushSecondaryText}"
+                               Margin="0,4,0,0"/>
                 </StackPanel>
 
-                <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
-                    <TextBox Width="160" Height="36" Margin="0,0,8,0" Padding="8,0" VerticalContentAlignment="Center"
+                <StackPanel Grid.Column="1"
+                            Orientation="Horizontal"
+                            VerticalAlignment="Center">
+                    <TextBox Width="160"
+                             Height="36"
+                             Margin="0,0,8,0"
+                             Padding="8,0"
+                             VerticalContentAlignment="Center"
                              Text="{Binding ReceiptNumberText, UpdateSourceTrigger=PropertyChanged}"/>
-                    <Button Content="Search" Command="{Binding SearchReceiptCommand}" Style="{StaticResource PrimaryActionButtonStyle}"/>
+                    <Button Content="Search"
+                            Command="{Binding SearchReceiptCommand}"
+                            Style="{StaticResource PrimaryActionButtonStyle}"/>
                 </StackPanel>
             </Grid>
         </Border>
 
-        <Border Grid.Row="1" Background="White" Padding="16" CornerRadius="12" BorderBrush="#E2E8F0" BorderThickness="1">
+        <Border Grid.Row="1"
+                Background="{StaticResource BrushSecondary}"
+                Padding="16"
+                CornerRadius="12"
+                BorderBrush="{StaticResource BrushAccent}"
+                BorderThickness="1">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
@@ -52,33 +88,74 @@
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
 
-                <TextBlock Grid.Row="0" Text="{Binding StatusMessage}" Foreground="#475569" FontSize="13"/>
+                <TextBlock Grid.Row="0"
+                           Text="{Binding StatusMessage}"
+                           Foreground="{StaticResource BrushSecondaryText}"
+                           FontSize="13"/>
 
-                <Grid Grid.Row="1" Margin="0,10,0,10" Visibility="{Binding ReceiptSectionVisibility}">
+                <Grid Grid.Row="1"
+                      Margin="0,10,0,10"
+                      Visibility="{Binding ReceiptSectionVisibility}">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
 
-                    <TextBlock Grid.Column="0" Text="{Binding SaleId, StringFormat=Receipt #: {0}}" FontWeight="SemiBold" Foreground="#1E293B"/>
-                    <TextBlock Grid.Column="1" Text="{Binding CashierName, StringFormat=Cashier: {0}}" FontWeight="SemiBold" Foreground="#1E293B" HorizontalAlignment="Center"/>
-                    <TextBlock Grid.Column="2" Text="{Binding SaleDateTime, StringFormat=Sale Date: {0:g}}" FontWeight="SemiBold" Foreground="#1E293B" HorizontalAlignment="Right"/>
+                    <TextBlock Grid.Column="0"
+                               Text="{Binding SaleId, StringFormat=Receipt #: {0}}"
+                               FontWeight="SemiBold"
+                               Foreground="{StaticResource BrushPrimaryText}"/>
+                    <TextBlock Grid.Column="1"
+                               Text="{Binding CashierName, StringFormat=Cashier: {0}}"
+                               FontWeight="SemiBold"
+                               Foreground="{StaticResource BrushPrimaryText}"
+                               HorizontalAlignment="Center"/>
+                    <TextBlock Grid.Column="2"
+                               Text="{Binding SaleDateTime, StringFormat=Sale Date: {0:g}}"
+                               FontWeight="SemiBold"
+                               Foreground="{StaticResource BrushPrimaryText}"
+                               HorizontalAlignment="Right"/>
                 </Grid>
 
-                <DataGrid Grid.Row="2" Visibility="{Binding ReceiptSectionVisibility}"
-                          ItemsSource="{Binding Items}" AutoGenerateColumns="False" IsReadOnly="True"
-                          RowHeaderWidth="0" GridLinesVisibility="Horizontal" BorderThickness="0">
+                <DataGrid Grid.Row="2"
+                          Visibility="{Binding ReceiptSectionVisibility}"
+                          ItemsSource="{Binding Items}"
+                          AutoGenerateColumns="False"
+                          IsReadOnly="True"
+                          RowHeaderWidth="0"
+                          GridLinesVisibility="Horizontal"
+                          BorderThickness="0">
                     <DataGrid.Resources>
                         <Style TargetType="DataGridColumnHeader">
-                            <Setter Property="Background" Value="#EEF2FF"/>
-                            <Setter Property="Foreground" Value="#3730A3"/>
+                            <Setter Property="Background" Value="{StaticResource BrushAccent}"/>
+                            <Setter Property="Foreground" Value="{StaticResource BrushPrimaryText}"/>
                             <Setter Property="FontSize" Value="13"/>
                             <Setter Property="FontWeight" Value="SemiBold"/>
                             <Setter Property="Height" Value="38"/>
                         </Style>
+                        <Style TargetType="DataGridCell">
+                            <Setter Property="Padding" Value="10,0"/>
+                            <Setter Property="VerticalContentAlignment" Value="Center"/>
+                            <Setter Property="Foreground" Value="{StaticResource BrushPrimaryText}"/>
+                            <Style.Triggers>
+                                <Trigger Property="IsSelected" Value="True">
+                                    <Setter Property="Background" Value="{StaticResource BrushSelectedRow}"/>
+                                    <Setter Property="BorderBrush" Value="{StaticResource BrushAccent}"/>
+                                    <Setter Property="Foreground" Value="{StaticResource BrushPrimaryText}"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
                         <Style TargetType="DataGridRow">
                             <Setter Property="Height" Value="40"/>
+                            <Style.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Background" Value="{StaticResource BrushButtonHover}"/>
+                                </Trigger>
+                                <Trigger Property="IsSelected" Value="True">
+                                    <Setter Property="Background" Value="{StaticResource BrushSelectedRow}"/>
+                                </Trigger>
+                            </Style.Triggers>
                         </Style>
                     </DataGrid.Resources>
                     <DataGrid.Columns>
@@ -89,12 +166,15 @@
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                                        <Button Width="28" Height="26" Margin="0,0,5,0"
+                                        <Button Width="28"
+                                                Height="26"
+                                                Margin="0,0,5,0"
                                                 Command="{Binding DataContext.DecreaseQtyCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}"
                                                 CommandParameter="{Binding}">
                                             <Icons:PackIconMaterial Kind="Minus" Width="14" Height="14"/>
                                         </Button>
-                                        <Button Width="28" Height="26"
+                                        <Button Width="28"
+                                                Height="26"
                                                 Command="{Binding DataContext.IncreaseQtyCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}"
                                                 CommandParameter="{Binding}">
                                             <Icons:PackIconMaterial Kind="Plus" Width="14" Height="14"/>
@@ -109,20 +189,25 @@
                     </DataGrid.Columns>
                 </DataGrid>
 
-                <Grid Grid.Row="3" Margin="0,10,0,0" Visibility="{Binding ReceiptSectionVisibility}">
+                <Grid Grid.Row="3"
+                      Margin="0,10,0,0"
+                      Visibility="{Binding ReceiptSectionVisibility}">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
 
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                        <TextBlock Text="Original Total: " FontWeight="SemiBold" Foreground="#64748B"/>
-                        <TextBlock Text="{Binding OriginalTotalAmount, StringFormat=PKR {0:N2}}" FontWeight="Bold" Foreground="#1E293B" Margin="0,0,16,0"/>
-                        <TextBlock Text="Updated Total: " FontWeight="SemiBold" Foreground="#64748B"/>
-                        <TextBlock Text="{Binding UpdatedTotalAmount, StringFormat=PKR {0:N2}}" FontWeight="Bold" Foreground="#1E293B"/>
+                        <TextBlock Text="Original Total: " FontWeight="SemiBold" Foreground="{StaticResource BrushSecondaryText}"/>
+                        <TextBlock Text="{Binding OriginalTotalAmount, StringFormat=PKR {0:N2}}" FontWeight="Bold" Foreground="{StaticResource BrushPrimaryText}" Margin="0,0,16,0"/>
+                        <TextBlock Text="Updated Total: " FontWeight="SemiBold" Foreground="{StaticResource BrushSecondaryText}"/>
+                        <TextBlock Text="{Binding UpdatedTotalAmount, StringFormat=PKR {0:N2}}" FontWeight="Bold" Foreground="{StaticResource BrushPrimaryText}"/>
                     </StackPanel>
 
-                    <Button Grid.Column="1" Content="Apply Changes and Print" Command="{Binding ApplyAndPrintCommand}" Style="{StaticResource PrimaryActionButtonStyle}"/>
+                    <Button Grid.Column="1"
+                            Content="Apply Changes and Print"
+                            Command="{Binding ApplyAndPrintCommand}"
+                            Style="{StaticResource PrimaryActionButtonStyle}"/>
                 </Grid>
             </Grid>
         </Border>

@@ -12,7 +12,7 @@
         ResizeMode="CanResize"
         SizeToContent="Manual"
         AllowsTransparency="False"
-        Background="#EFF2F7"
+        Background="{StaticResource BrushPrimaryDark}"
         Title="AdminDashboard"
         Height="760"
         Width="1280"
@@ -32,7 +32,7 @@
             <Setter Property="Height" Value="34"/>
             <Setter Property="Background" Value="Transparent"/>
             <Setter Property="BorderThickness" Value="0"/>
-            <Setter Property="Foreground" Value="#64748B"/>
+            <Setter Property="Foreground" Value="{StaticResource BrushSecondaryText}"/>
             <Setter Property="Cursor" Value="Hand"/>
             <Setter Property="Template">
                 <Setter.Value>
@@ -45,28 +45,15 @@
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="ButtonChrome" Property="Background" Value="#EEF2FF"/>
+                                <Setter TargetName="ButtonChrome" Property="Background" Value="{StaticResource BrushButtonHover}"/>
                             </Trigger>
                             <Trigger Property="IsPressed" Value="True">
-                                <Setter TargetName="ButtonChrome" Property="Background" Value="#E2E8F0"/>
+                                <Setter TargetName="ButtonChrome" Property="Background" Value="{StaticResource BrushSecondary}"/>
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
-        </Style>
-
-        <Style x:Key="AppBarCloseButtonStyle" TargetType="Button" BasedOn="{StaticResource AppBarButtonStyle}">
-            <Setter Property="Foreground" Value="#64748B"/>
-            <Style.Triggers>
-                <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="Foreground" Value="#DC2626"/>
-                    <Setter Property="Background" Value="#FEE2E2"/>
-                </Trigger>
-                <Trigger Property="IsPressed" Value="True">
-                    <Setter Property="Background" Value="#FECACA"/>
-                </Trigger>
-            </Style.Triggers>
         </Style>
 
         <Style x:Key="SideMenuButtonStyle" TargetType="Button">
@@ -76,10 +63,10 @@
             <Setter Property="FontSize" Value="14"/>
             <Setter Property="FontWeight" Value="SemiBold"/>
             <Setter Property="Background" Value="Transparent"/>
-            <Setter Property="BorderBrush" Value="#7C5AE5"/>
+            <Setter Property="BorderBrush" Value="{StaticResource BrushAccent}"/>
             <Setter Property="BorderThickness" Value="1"/>
             <Setter Property="HorizontalContentAlignment" Value="Left"/>
-            <Setter Property="Foreground" Value="#EDE9FE"/>
+            <Setter Property="Foreground" Value="{StaticResource BrushPrimaryText}"/>
             <Setter Property="Cursor" Value="Hand"/>
             <Setter Property="Template">
                 <Setter.Value>
@@ -95,14 +82,14 @@
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="MenuBorder" Property="Background" Value="#8B6AF1"/>
-                                <Setter TargetName="MenuBorder" Property="BorderBrush" Value="#C4B5FD"/>
-                                <Setter Property="Foreground" Value="White"/>
+                                <Setter TargetName="MenuBorder" Property="Background" Value="{StaticResource BrushAccent}"/>
+                                <Setter TargetName="MenuBorder" Property="BorderBrush" Value="{StaticResource BrushAccent}"/>
+                                <Setter Property="Foreground" Value="{StaticResource BrushPrimaryText}"/>
                             </Trigger>
                             <Trigger Property="IsPressed" Value="True">
-                                <Setter TargetName="MenuBorder" Property="Background" Value="#4C1D95"/>
-                                <Setter TargetName="MenuBorder" Property="BorderBrush" Value="#A78BFA"/>
-                                <Setter Property="Foreground" Value="White"/>
+                                <Setter TargetName="MenuBorder" Property="Background" Value="{StaticResource BrushButtonHover}"/>
+                                <Setter TargetName="MenuBorder" Property="BorderBrush" Value="{StaticResource BrushButtonHover}"/>
+                                <Setter Property="Foreground" Value="{StaticResource BrushPrimaryText}"/>
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -117,7 +104,7 @@
         </Style>
     </Window.Resources>
 
-    <Border CornerRadius="30" Background="#EFF2F7">
+    <Border CornerRadius="30" Background="{StaticResource BrushPrimaryDark}">
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
@@ -128,28 +115,28 @@
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
 
-            <Border Grid.Row="0"
+                <Border Grid.Row="0"
                     Grid.Column="0"
                     Grid.ColumnSpan="2"
                     Height="74"
                     CornerRadius="30,30,0,0"
-                    BorderBrush="#E2E8F0"
+                    BorderBrush="{StaticResource BrushAccent}"
                     BorderThickness="0,0,0,1">
-                <Border Background="#FFFFFF"
-                        CornerRadius="30,30,0,0" HorizontalAlignment="Left" Width="1280">
+                <Border Background="{StaticResource HeaderGradient}"
+                    CornerRadius="30,30,0,0" HorizontalAlignment="Left" Width="1280">
                     <DockPanel Margin="18,0,14,0" LastChildFill="False">
                         <StackPanel DockPanel.Dock="Left"
                                     Orientation="Horizontal"
                                     VerticalAlignment="Center">
-                            <Border Width="40"
+                                <Border Width="40"
                                     Height="40"
-                                    Background="#F1EDFF"
+                                    Background="{StaticResource BrushButtonHover}"
                                     CornerRadius="12"
                                     Margin="0,0,12,0">
                                 <Icons:PackIconMaterial Kind="StorefrontOutline"
                                                         Width="22"
                                                         Height="22"
-                                                        Foreground="#623ED0"
+                                            Foreground="{StaticResource BrushAccent}"
                                                         VerticalAlignment="Center"
                                                         HorizontalAlignment="Center"/>
                             </Border>
@@ -158,29 +145,21 @@
                                 <TextBlock Text="SuperStore Management"
                                            FontSize="20"
                                            FontWeight="SemiBold"
-                                           Foreground="#1E293B"/>
+                                           Foreground="{StaticResource BrushPrimaryText}"/>
                                 <TextBlock Text="Admin Dashboard"
                                            FontSize="12"
-                                           Foreground="#64748B"
+                                           Foreground="{StaticResource BrushSecondaryText}"
                                            Margin="0,2,0,0"/>
                             </StackPanel>
                         </StackPanel>
 
-                        <Button DockPanel.Dock="Right"
-                                Style="{StaticResource AppBarCloseButtonStyle}"
-                                VerticalAlignment="Center">
-                            <Icons:PackIconMaterial Kind="Close"
-                                                    Width="16"
-                                                    Height="16"
-                                                    Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}"/>
-                        </Button>
                     </DockPanel>
                 </Border>
             </Border>
 
-            <Border Grid.Row="1"
+                <Border Grid.Row="1"
                     Grid.Column="0"
-                    Background="#623ED0"
+                    Background="{StaticResource BrushAccent}"
                     CornerRadius="0,50,0,30"
                     Margin="0,0,0,0"
                     Padding="16,16,12,16">
@@ -189,18 +168,18 @@
                         <TextBlock Text="SuperStore"
                                    FontSize="20"
                                    FontWeight="Bold"
-                                   Foreground="White"/>
+                                   Foreground="{StaticResource BrushPrimaryText}"/>
                         <TextBlock Text="Admin Panel"
                                    Margin="0,3,0,0"
                                    FontSize="12"
-                                   Foreground="#DDD6FE"/>
+                                   Foreground="{StaticResource BrushSecondaryText}"/>
                     </StackPanel>
 
-                    <Button DockPanel.Dock="Bottom"
+                        <Button DockPanel.Dock="Bottom"
                             Height="44"
                             Margin="0,12,0,0"
-                            Background="#5B21B6"
-                            BorderBrush="#A78BFA"
+                            Background="{StaticResource BrushAccent}"
+                            BorderBrush="{StaticResource BrushAccent}"
                             BorderThickness="1"
                             HorizontalContentAlignment="Left"
                             Padding="12,0"
@@ -215,7 +194,7 @@
                                   HorizontalScrollBarVisibility="Disabled">
                         <StackPanel>
                             <TextBlock Text="MENU"
-                                       Foreground="#C4B5FD"
+                                       Foreground="{StaticResource BrushButtonHover}"
                                        FontSize="11"
                                        FontWeight="SemiBold"
                                        Margin="8,0,0,8"/>
@@ -225,9 +204,9 @@
                                     <Style TargetType="Button" BasedOn="{StaticResource SideMenuButtonStyle}">
                                         <Style.Triggers>
                                             <DataTrigger Binding="{Binding ActiveMenu}" Value="Dashboard">
-                                                <Setter Property="Background" Value="#7C5AE5"/>
-                                                <Setter Property="BorderBrush" Value="#C4B5FD"/>
-                                                <Setter Property="Foreground" Value="White"/>
+                                                <Setter Property="Background" Value="{StaticResource BrushAccent}"/>
+                                                <Setter Property="BorderBrush" Value="{StaticResource BrushAccent}"/>
+                                                <Setter Property="Foreground" Value="{StaticResource BrushPrimaryText}"/>
                                             </DataTrigger>
                                         </Style.Triggers>
                                     </Style>
@@ -244,9 +223,9 @@
                                     <Style TargetType="Button" BasedOn="{StaticResource SideMenuButtonStyle}">
                                         <Style.Triggers>
                                             <DataTrigger Binding="{Binding ActiveMenu}" Value="Employees">
-                                                <Setter Property="Background" Value="#7C5AE5"/>
-                                                <Setter Property="BorderBrush" Value="#C4B5FD"/>
-                                                <Setter Property="Foreground" Value="White"/>
+                                                <Setter Property="Background" Value="{StaticResource BrushAccent}"/>
+                                                <Setter Property="BorderBrush" Value="{StaticResource BrushAccent}"/>
+                                                <Setter Property="Foreground" Value="{StaticResource BrushPrimaryText}"/>
                                             </DataTrigger>
                                         </Style.Triggers>
                                     </Style>
@@ -262,9 +241,9 @@
                                     <Style TargetType="Button" BasedOn="{StaticResource SideMenuButtonStyle}">
                                         <Style.Triggers>
                                             <DataTrigger Binding="{Binding ActiveMenu}" Value="Category">
-                                                <Setter Property="Background" Value="#7C5AE5"/>
-                                                <Setter Property="BorderBrush" Value="#C4B5FD"/>
-                                                <Setter Property="Foreground" Value="White"/>
+                                                <Setter Property="Background" Value="{StaticResource BrushAccent}"/>
+                                                <Setter Property="BorderBrush" Value="{StaticResource BrushAccent}"/>
+                                                <Setter Property="Foreground" Value="{StaticResource BrushPrimaryText}"/>
                                             </DataTrigger>
                                         </Style.Triggers>
                                     </Style>
@@ -280,9 +259,9 @@
                                     <Style TargetType="Button" BasedOn="{StaticResource SideMenuButtonStyle}">
                                         <Style.Triggers>
                                             <DataTrigger Binding="{Binding ActiveMenu}" Value="Product">
-                                                <Setter Property="Background" Value="#7C5AE5"/>
-                                                <Setter Property="BorderBrush" Value="#C4B5FD"/>
-                                                <Setter Property="Foreground" Value="White"/>
+                                                <Setter Property="Background" Value="{StaticResource BrushAccent}"/>
+                                                <Setter Property="BorderBrush" Value="{StaticResource BrushAccent}"/>
+                                                <Setter Property="Foreground" Value="{StaticResource BrushPrimaryText}"/>
                                             </DataTrigger>
                                         </Style.Triggers>
                                     </Style>
@@ -297,9 +276,9 @@
                                     <Style TargetType="Button" BasedOn="{StaticResource SideMenuButtonStyle}">
                                         <Style.Triggers>
                                             <DataTrigger Binding="{Binding ActiveMenu}" Value="StockHistory">
-                                                <Setter Property="Background" Value="#7C5AE5"/>
-                                                <Setter Property="BorderBrush" Value="#C4B5FD"/>
-                                                <Setter Property="Foreground" Value="White"/>
+                                                <Setter Property="Background" Value="{StaticResource BrushAccent}"/>
+                                                <Setter Property="BorderBrush" Value="{StaticResource BrushAccent}"/>
+                                                <Setter Property="Foreground" Value="{StaticResource BrushPrimaryText}"/>
                                             </DataTrigger>
                                         </Style.Triggers>
                                     </Style>
@@ -314,11 +293,11 @@
                 </DockPanel>
             </Border>
 
-            <Border Grid.Row="1"
+                <Border Grid.Row="1"
                     Grid.Column="1"
                     Margin="16"
                     Padding="18"
-                    Background="White"
+                    Background="{StaticResource BrushSecondary}"
                     CornerRadius="14">
                 <ContentControl x:Name="MainContentHost" Content="{Binding CurrentView}"/>
             </Border>
@@ -328,7 +307,7 @@
                           Width="3"
                           HorizontalAlignment="Right"
                           VerticalAlignment="Stretch"
-                          Background="#C7D2FE"
+                          Background="{StaticResource BrushAccent}"
                           ResizeDirection="Columns"
                           ResizeBehavior="CurrentAndNext"
                           ShowsPreview="True"/>

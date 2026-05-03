@@ -13,11 +13,11 @@
         <vm:EmployeeViewModel/>
     </UserControl.DataContext>
     <UserControl.Resources>
-        <SolidColorBrush x:Key="PrimaryBrush" Color="#623ED0"/>
-        <SolidColorBrush x:Key="PrimaryLightBrush" Color="#7C5AE5"/>
-        <SolidColorBrush x:Key="SurfaceBrush" Color="#FFFFFF"/>
-        <SolidColorBrush x:Key="TextPrimaryBrush" Color="#1E293B"/>
-        <SolidColorBrush x:Key="TextSecondaryBrush" Color="#64748B"/>
+        <StaticResource x:Key="PrimaryBrush" ResourceKey="BrushAccent"/>
+        <StaticResource x:Key="PrimaryLightBrush" ResourceKey="BrushButtonHover"/>
+        <StaticResource x:Key="SurfaceBrush" ResourceKey="BrushSecondary"/>
+        <StaticResource x:Key="TextPrimaryBrush" ResourceKey="BrushPrimaryText"/>
+        <StaticResource x:Key="TextSecondaryBrush" ResourceKey="BrushSecondaryText"/>
 
         <Style x:Key="LabelStyle" TargetType="TextBlock">
             <Setter Property="Foreground" Value="{StaticResource TextSecondaryBrush}"/>
@@ -37,8 +37,9 @@
             <Setter Property="FontSize" Value="14"/>
             <Setter Property="FontWeight" Value="SemiBold"/>
             <Setter Property="Foreground" Value="White"/>
-            <Setter Property="Background" Value="{StaticResource PrimaryBrush}"/>
-            <Setter Property="BorderBrush" Value="{StaticResource PrimaryLightBrush}"/>
+            <Setter Property="Foreground" Value="{StaticResource BrushPrimaryText}"/>
+            <Setter Property="Background" Value="{StaticResource BrushAccent}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource BrushAccent}"/>
             <Setter Property="BorderThickness" Value="1"/>
             <Setter Property="Cursor" Value="Hand"/>
             <Setter Property="Template">
@@ -53,10 +54,10 @@
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="BtnBorder" Property="Background" Value="#7C5AE5"/>
+                                <Setter TargetName="BtnBorder" Property="Background" Value="{StaticResource BrushButtonHover}"/>
                             </Trigger>
                             <Trigger Property="IsPressed" Value="True">
-                                <Setter TargetName="BtnBorder" Property="Background" Value="#4C1D95"/>
+                                <Setter TargetName="BtnBorder" Property="Background" Value="{StaticResource BrushSecondary}"/>
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -66,9 +67,9 @@
 
         <Style x:Key="GridActionButtonStyle" TargetType="Button">
             <Setter Property="Height" Value="30"/>
-            <Setter Property="Foreground" Value="White"/>
-            <Setter Property="Background" Value="{StaticResource PrimaryBrush}"/>
-            <Setter Property="BorderBrush" Value="{StaticResource PrimaryLightBrush}"/>
+            <Setter Property="Foreground" Value="{StaticResource BrushPrimaryText}"/>
+            <Setter Property="Background" Value="{StaticResource BrushAccent}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource BrushAccent}"/>
             <Setter Property="BorderThickness" Value="1"/>
             <Setter Property="Cursor" Value="Hand"/>
             <Setter Property="FontSize" Value="12"/>
@@ -84,10 +85,10 @@
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="GridBtnBorder" Property="Background" Value="#7C5AE5"/>
+                                <Setter TargetName="GridBtnBorder" Property="Background" Value="{StaticResource BrushButtonHover}"/>
                             </Trigger>
                             <Trigger Property="IsPressed" Value="True">
-                                <Setter TargetName="GridBtnBorder" Property="Background" Value="#4C1D95"/>
+                                <Setter TargetName="GridBtnBorder" Property="Background" Value="{StaticResource BrushSecondary}"/>
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -96,14 +97,14 @@
         </Style>
 
         <Style x:Key="GridDeleteButtonStyle" TargetType="Button" BasedOn="{StaticResource GridActionButtonStyle}">
-            <Setter Property="Background" Value="#DC2626"/>
-            <Setter Property="BorderBrush" Value="#F87171"/>
+            <Setter Property="Background" Value="{StaticResource BrushAccent}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource BrushAccent}"/>
             <Style.Triggers>
                 <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="Background" Value="#EF4444"/>
+                    <Setter Property="Background" Value="{StaticResource BrushButtonHover}"/>
                 </Trigger>
                 <Trigger Property="IsPressed" Value="True">
-                    <Setter Property="Background" Value="#B91C1C"/>
+                    <Setter Property="Background" Value="{StaticResource BrushSecondary}"/>
                 </Trigger>
             </Style.Triggers>
         </Style>
@@ -119,7 +120,7 @@
                 Background="{StaticResource SurfaceBrush}"
                 Padding="16"
                 CornerRadius="12"
-                BorderBrush="#E2E8F0"
+                BorderBrush="{StaticResource BrushAccent}"
                 BorderThickness="1"
                 Margin="0,0,0,6">
             <Grid>
@@ -142,7 +143,7 @@
                 <Border Grid.Row="0"
                         Grid.Column="0"
                         Grid.ColumnSpan="7"
-                        Background="#F3F0FF"
+                        Background="{StaticResource BrushButtonHover}"
                         CornerRadius="10"
                         Padding="12"
                         Margin="0,0,0,8">
@@ -224,18 +225,18 @@
                 Background="{StaticResource SurfaceBrush}"
                 Padding="10"
                 CornerRadius="12"
-                BorderBrush="#E2E8F0"
+                BorderBrush="{StaticResource BrushAccent}"
                 BorderThickness="1">
             <DataGrid x:Name="EmployeeDataGrid"
-                      Background="White"
+                      Background="{StaticResource BrushSecondary}"
                       FontSize="14"
                       GridLinesVisibility="Horizontal"
-                      RowBackground="#FFFFFF"
-                      AlternatingRowBackground="#F8FAFC"
+                      RowBackground="{StaticResource BrushSecondary}"
+                      AlternatingRowBackground="{StaticResource BrushAltRow}"
                       RowHeaderWidth="0"
                       BorderThickness="0"
-                      HorizontalGridLinesBrush="#E2E8F0"
-                      VerticalGridLinesBrush="#EEF2F7"
+                      HorizontalGridLinesBrush="{StaticResource BrushAccent}"
+                      VerticalGridLinesBrush="{StaticResource BrushAccent}"
                       SelectionUnit="FullRow"
                       HeadersVisibility="Column"
                       AutoGenerateColumns="False"
@@ -246,27 +247,27 @@
                       SelectedItem="{Binding SelectedEmployee}">
                 <DataGrid.Resources>
                     <Style TargetType="DataGridColumnHeader">
-                        <Setter Property="Background" Value="#F3F0FF"/>
-                        <Setter Property="Foreground" Value="#4C1D95"/>
+                        <Setter Property="Background" Value="{StaticResource BrushAccent}"/>
+                        <Setter Property="Foreground" Value="{StaticResource BrushPrimaryText}"/>
                         <Setter Property="FontSize" Value="14"/>
                         <Setter Property="FontWeight" Value="SemiBold"/>
                         <Setter Property="Height" Value="40"/>
                         <Setter Property="Padding" Value="10,0"/>
-                        <Setter Property="BorderBrush" Value="#DDD6FE"/>
+                        <Setter Property="BorderBrush" Value="{StaticResource BrushAccent}"/>
                         <Setter Property="BorderThickness" Value="0,0,0,1"/>
                     </Style>
                     <Style TargetType="DataGridCell">
                         <Setter Property="FontSize" Value="13"/>
                         <Setter Property="Padding" Value="8,6"/>
                         <Setter Property="BorderThickness" Value="0"/>
-                        <Setter Property="Foreground" Value="#1E293B"/>
+                        <Setter Property="Foreground" Value="{StaticResource BrushPrimaryText}"/>
                         <Setter Property="VerticalContentAlignment" Value="Center"/>
                         <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
                         <Style.Triggers>
                             <Trigger Property="IsSelected" Value="True">
-                                <Setter Property="Background" Value="#EDE9FE"/>
-                                <Setter Property="BorderBrush" Value="#DDD6FE"/>
-                                <Setter Property="Foreground" Value="#1E293B"/>
+                                <Setter Property="Background" Value="{StaticResource BrushSelectedRow}"/>
+                                <Setter Property="BorderBrush" Value="{StaticResource BrushAccent}"/>
+                                <Setter Property="Foreground" Value="{StaticResource BrushPrimaryText}"/>
                             </Trigger>
                         </Style.Triggers>
                     </Style>
@@ -275,10 +276,10 @@
                         <Setter Property="BorderThickness" Value="0"/>
                         <Style.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter Property="Background" Value="#EEF2FF"/>
+                                <Setter Property="Background" Value="{StaticResource BrushButtonHover}"/>
                             </Trigger>
                             <Trigger Property="IsSelected" Value="True">
-                                <Setter Property="Background" Value="#EDE9FE"/>
+                                <Setter Property="Background" Value="{StaticResource BrushSelectedRow}"/>
                             </Trigger>
                         </Style.Triggers>
                     </Style>
