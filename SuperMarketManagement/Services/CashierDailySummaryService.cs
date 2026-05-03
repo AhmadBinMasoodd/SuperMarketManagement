@@ -10,14 +10,49 @@ namespace SuperMarketManagement.Services
     {
         private readonly MarketDbContext _context = new();
 
-        public CashierDailySummarySnapshot GetSummary(int cashierUserId, DateTime date)
+        public CashierDailySummarySnapshot GetSummary(int viewerUserId, DateTime date)
         {
             var dayStart = date.Date;
             var dayEnd = dayStart.AddDays(1);
 
+            // Determine which users' sales the viewer is allowed to see
+            var viewer = _context.Users.AsNoTracking().FirstOrDefault(u => u.Id == viewerUserId);
+            if (viewer is null)
+            {
+                return new CashierDailySummarySnapshot
+                {
+                    Date = dayStart,
+                    TotalSalesAmount = 0m,
+                    ReceiptCount = 0,
+                    TotalItemsSold = 0m,
+                    AverageReceiptAmount = 0m,
+                    HighestReceiptAmount = 0m,
+                    Sales = Array.Empty<CashierReceiptSummary>()
+                };
+            }
+
+            List<int> allowedUserIds;
+            var role = (viewer.Role ?? string.Empty).ToLowerInvariant();
+            if (role == "admin")
+            {
+                allowedUserIds = _context.Users.AsNoTracking().Select(u => u.Id).ToList();
+            }
+            else if (role == "manager")
+            {
+                allowedUserIds = _context.Users.AsNoTracking()
+                    .Where(u => u.Role.ToLower() == "manager" || u.Role.ToLower() == "cashier")
+                    .Select(u => u.Id)
+                    .ToList();
+            }
+            else
+            {
+                // default: cashier or other roles can only see their own sales
+                allowedUserIds = new List<int> { viewerUserId };
+            }
+
             var sales = _context.Sales
                 .AsNoTracking()
-                .Where(s => s.UserId == cashierUserId && s.SaleDateTime >= dayStart && s.SaleDateTime < dayEnd)
+                .Where(s => allowedUserIds.Contains(s.UserId) && s.SaleDateTime >= dayStart && s.SaleDateTime < dayEnd)
                 .OrderByDescending(s => s.SaleDateTime)
                 .ToList();
 

@@ -288,6 +288,78 @@
                                     <TextBlock Text="Stock History" Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}" VerticalAlignment="Center"/>
                                 </DockPanel>
                             </Button>
+
+                            <Button Name="PosButton" Command="{Binding NavigatePosCommand}">
+                                <Button.Style>
+                                    <Style TargetType="Button" BasedOn="{StaticResource SideMenuButtonStyle}">
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding ActiveMenu}" Value="POS">
+                                                <Setter Property="Background" Value="{StaticResource BrushSecondary}"/>
+                                                <Setter Property="BorderBrush" Value="Transparent"/>
+                                                <Setter Property="Foreground" Value="{StaticResource BrushPrimaryText}"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Button.Style>
+                                <DockPanel>
+                                    <Icons:PackIconMaterial Kind="CashRegister" Width="18" Height="18" Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}" Margin="0,0,10,0"/>
+                                    <TextBlock Text="Point of Sale" Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}" VerticalAlignment="Center"/>
+                                </DockPanel>
+                            </Button>
+
+                            <Button Name="ReturnRefundBtn" Command="{Binding NavigateReturnRefundCommand}">
+                                <Button.Style>
+                                    <Style TargetType="Button" BasedOn="{StaticResource SideMenuButtonStyle}">
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding ActiveMenu}" Value="ReturnRefund">
+                                                <Setter Property="Background" Value="{StaticResource BrushSecondary}"/>
+                                                <Setter Property="BorderBrush" Value="Transparent"/>
+                                                <Setter Property="Foreground" Value="{StaticResource BrushPrimaryText}"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Button.Style>
+                                <DockPanel>
+                                    <Icons:PackIconMaterial Kind="CashRefund" Width="18" Height="18" Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}" Margin="0,0,10,0"/>
+                                    <TextBlock Text="Return / Refund" Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}" VerticalAlignment="Center"/>
+                                </DockPanel>
+                            </Button>
+
+                            <Button Name="DailySummaryBtn" Command="{Binding NavigateDailySummaryCommand}">
+                                <Button.Style>
+                                    <Style TargetType="Button" BasedOn="{StaticResource SideMenuButtonStyle}">
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding ActiveMenu}" Value="DailySummary">
+                                                <Setter Property="Background" Value="{StaticResource BrushSecondary}"/>
+                                                <Setter Property="BorderBrush" Value="Transparent"/>
+                                                <Setter Property="Foreground" Value="{StaticResource BrushPrimaryText}"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Button.Style>
+                                <DockPanel>
+                                    <Icons:PackIconMaterial Kind="ChartBox" Width="18" Height="18" Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}" Margin="0,0,10,0"/>
+                                    <TextBlock Text="Daily Summary" Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}" VerticalAlignment="Center"/>
+                                </DockPanel>
+                            </Button>
+
+                            <Button Name="ProfileBtn" Command="{Binding NavigateProfileCommand}">
+                                <Button.Style>
+                                    <Style TargetType="Button" BasedOn="{StaticResource SideMenuButtonStyle}">
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding ActiveMenu}" Value="Profile">
+                                                <Setter Property="Background" Value="{StaticResource BrushSecondary}"/>
+                                                <Setter Property="BorderBrush" Value="Transparent"/>
+                                                <Setter Property="Foreground" Value="{StaticResource BrushPrimaryText}"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Button.Style>
+                                <DockPanel>
+                                    <Icons:PackIconMaterial Kind="Account" Width="18" Height="18" Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}" Margin="0,0,10,0"/>
+                                    <TextBlock Text="My Profile" Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}" VerticalAlignment="Center"/>
+                                </DockPanel>
+                            </Button>
                         </StackPanel>
                     </ScrollViewer>
                 </DockPanel>

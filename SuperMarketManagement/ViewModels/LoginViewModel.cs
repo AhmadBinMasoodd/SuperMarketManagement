@@ -3,6 +3,7 @@ using SuperMarketManagement.Views.Admin;
 using SuperMarketManagement.Views.Manager;
 using System.Windows;
 using System.Windows.Input;
+using System.Linq;
 using SuperMarketManagement.Models;
 using SuperMarketManagement.Services;
 
@@ -59,31 +60,35 @@ namespace SuperMarketManagement.ViewModels
 
             ErrorMessage = string.Empty;
 
-                var currentWindow = Application.Current.MainWindow;
+                // Find the currently displayed login window (if any) so we can close it
+                var loginWindow = Application.Current.Windows.OfType<MainWindow>().FirstOrDefault();
 
-            if (string.Equals(user.Role, "Admin", StringComparison.OrdinalIgnoreCase))
-            {
-                var dashboard = new AdminDashboard(user);
-                dashboard.Show();
-                    currentWindow?.Close();
-                return;
-            }
+                if (string.Equals(user.Role, "Admin", StringComparison.OrdinalIgnoreCase))
+                {
+                    var dashboard = new AdminDashboard(user);
+                    Application.Current.MainWindow = dashboard;
+                    dashboard.Show();
+                    loginWindow?.Close();
+                    return;
+                }
 
-            if (string.Equals(user.Role, "Manager", StringComparison.OrdinalIgnoreCase))
-            {
-                var dashboard = new ManagerDashboard(user);
-                dashboard.Show();
-                    currentWindow?.Close();
-                return;
-            }
+                if (string.Equals(user.Role, "Manager", StringComparison.OrdinalIgnoreCase))
+                {
+                    var dashboard = new ManagerDashboard(user);
+                    Application.Current.MainWindow = dashboard;
+                    dashboard.Show();
+                    loginWindow?.Close();
+                    return;
+                }
 
-            if (string.Equals(user.Role, "Cashier", StringComparison.OrdinalIgnoreCase))
-            {
-                var dashboard = new SuperMarketManagement.Views.Cashier.CashierDashboard(user);
-                dashboard.Show();
-                    currentWindow?.Close();
-                return;
-            }
+                if (string.Equals(user.Role, "Cashier", StringComparison.OrdinalIgnoreCase))
+                {
+                    var dashboard = new SuperMarketManagement.Views.Cashier.CashierDashboard(user);
+                    Application.Current.MainWindow = dashboard;
+                    dashboard.Show();
+                    loginWindow?.Close();
+                    return;
+                }
 
             ErrorMessage = $"Role '{user.Role}' not supported yet.";
         }

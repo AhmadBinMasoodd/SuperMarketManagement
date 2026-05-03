@@ -153,8 +153,8 @@
                           ItemsSource="{Binding BillItems}">
                     <DataGrid.Resources>
                         <Style TargetType="DataGridColumnHeader">
-                            <Setter Property="Background" Value="#EEF2FF"/>
-                            <Setter Property="Foreground" Value="#3730A3"/>
+                            <Setter Property="Background" Value="{StaticResource BrushAccent}"/>
+                            <Setter Property="Foreground" Value="{StaticResource BrushPrimaryText}"/>
                             <Setter Property="FontSize" Value="14"/>
                             <Setter Property="FontWeight" Value="SemiBold"/>
                             <Setter Property="Height" Value="40"/>
@@ -163,12 +163,12 @@
                         <Style TargetType="DataGridCell">
                             <Setter Property="Padding" Value="10,0"/>
                             <Setter Property="VerticalContentAlignment" Value="Center"/>
-                            <Setter Property="Foreground" Value="#1E293B"/>
+                            <Setter Property="Foreground" Value="{StaticResource BrushPrimaryText}"/>
                             <Style.Triggers>
                                 <Trigger Property="IsSelected" Value="True">
-                                    <Setter Property="Background" Value="#EDE9FE"/>
-                                    <Setter Property="BorderBrush" Value="#DDD6FE"/>
-                                    <Setter Property="Foreground" Value="#1E293B"/>
+                                    <Setter Property="Background" Value="{StaticResource BrushSelectedRow}"/>
+                                    <Setter Property="BorderBrush" Value="{StaticResource BrushAccent}"/>
+                                    <Setter Property="Foreground" Value="{StaticResource BrushPrimaryText}"/>
                                 </Trigger>
                             </Style.Triggers>
                         </Style>
@@ -177,10 +177,10 @@
                             <Setter Property="BorderThickness" Value="0"/>
                             <Style.Triggers>
                                 <Trigger Property="IsMouseOver" Value="True">
-                                    <Setter Property="Background" Value="#EEF2FF"/>
+                                    <Setter Property="Background" Value="{StaticResource BrushButtonHover}"/>
                                 </Trigger>
                                 <Trigger Property="IsSelected" Value="True">
-                                    <Setter Property="Background" Value="#EDE9FE"/>
+                                    <Setter Property="Background" Value="{StaticResource BrushSelectedRow}"/>
                                 </Trigger>
                             </Style.Triggers>
                         </Style>

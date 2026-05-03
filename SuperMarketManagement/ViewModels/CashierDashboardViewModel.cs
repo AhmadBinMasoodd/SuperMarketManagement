@@ -74,8 +74,9 @@ namespace SuperMarketManagement.ViewModels
 
         private void ExecuteLogout()
         {
-            // Create and show the login window first
+            // Create and show the login window first and set it as Application.MainWindow
             var loginWindow = new MainWindow();
+            Application.Current.MainWindow = loginWindow;
             loginWindow.Show();
 
             // Then close the cashier dashboard

@@ -1,6 +1,7 @@
 using SuperMarketManagement.Models;
 using SuperMarketManagement.ViewModels.Base;
 using SuperMarketManagement.Views.Admin;
+using SuperMarketManagement.Views.Cashier;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -30,6 +31,10 @@ namespace SuperMarketManagement.ViewModels
         public ICommand NavigateCategoryCommand { get; }
         public ICommand NavigateProductCommand { get; }
         public ICommand NavigateStockHistoryCommand { get; }
+        public ICommand NavigatePosCommand { get; }
+        public ICommand NavigateReturnRefundCommand { get; }
+        public ICommand NavigateDailySummaryCommand { get; }
+        public ICommand NavigateProfileCommand { get; }
         public ICommand LogoutCommand { get; }
 
         public AdminDashboardViewModel(User user)
@@ -41,6 +46,10 @@ namespace SuperMarketManagement.ViewModels
             NavigateCategoryCommand = new RelayCommand(_ => ExecuteNavigateCategory());
             NavigateProductCommand = new RelayCommand(_ => ExecuteNavigateProduct());
             NavigateStockHistoryCommand = new RelayCommand(_ => ExecuteNavigateStockHistory());
+            NavigatePosCommand = new RelayCommand(_ => ExecuteNavigatePos());
+            NavigateReturnRefundCommand = new RelayCommand(_ => ExecuteNavigateReturnRefund());
+            NavigateDailySummaryCommand = new RelayCommand(_ => ExecuteNavigateDailySummary());
+            NavigateProfileCommand = new RelayCommand(_ => ExecuteNavigateProfile());
             LogoutCommand = new RelayCommand(_ => ExecuteLogout());
 
             // Default view
@@ -77,6 +86,30 @@ namespace SuperMarketManagement.ViewModels
             ActiveMenu = "StockHistory";
         }
 
+        private void ExecuteNavigatePos()
+        {
+            CurrentView = new SalesView(_currentUser);
+            ActiveMenu = "POS";
+        }
+
+        private void ExecuteNavigateReturnRefund()
+        {
+            CurrentView = new ReturnRefundView(_currentUser);
+            ActiveMenu = "ReturnRefund";
+        }
+
+        private void ExecuteNavigateDailySummary()
+        {
+            CurrentView = new DailySummaryView(_currentUser);
+            ActiveMenu = "DailySummary";
+        }
+
+        private void ExecuteNavigateProfile()
+        {
+            CurrentView = new Profile(_currentUser);
+            ActiveMenu = "Profile";
+        }
+
         private void ExecuteLogout()
         {
             // Close the admin dashboard first
@@ -92,6 +125,7 @@ namespace SuperMarketManagement.ViewModels
 
             // Create and show the login window
             var loginWindow = new MainWindow();
+            Application.Current.MainWindow = loginWindow;
             loginWindow.Show();
 
             // Now close the admin dashboard
